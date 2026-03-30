@@ -5,6 +5,15 @@ import type {
   charSpecSchema,
   formInputMetaSchema,
 } from "@/lib/zod";
+import {
+  emptyStringNotAllowed,
+  emptyStringToUndefined,
+} from "@/validation/utils";
+import { EMPTY_STRING } from "./constants";
+import {
+  formatFormCurrencyForDatabase,
+  formatFormDecimalForDatabase,
+} from "./number";
 
 type FormInputMeta = z.infer<typeof formInputMetaSchema>;
 
@@ -102,6 +111,45 @@ export function textField(meta: TextFieldMeta) {
   return z
     .string()
     .overwrite((value) => getCleanTextUnicode({ value, chars: meta.chars }))
+    .meta(meta);
+}
+
+export function enumField<T extends string>(values: T[], meta: FormInputMeta) {
+  return z
+    .enum([EMPTY_STRING, ...values])
+    .transform((value, ctx): T => {
+      return emptyStringNotAllowed(value as T, ctx);
+    })
+    .meta(meta);
+}
+
+export function optionalEnumField<T extends string>(
+  values: T[],
+  meta: FormInputMeta
+) {
+  return z
+    .enum([EMPTY_STRING, ...values])
+    .transform((value): T | undefined => {
+      return emptyStringToUndefined(value) as T | undefined;
+    })
+    .meta(meta);
+}
+
+export function decimalField(meta: FormInputMeta) {
+  return z.string().transform(formatFormDecimalForDatabase).meta(meta);
+}
+
+export function currencyField(meta: FormInputMeta) {
+  return z.string().transform(formatFormCurrencyForDatabase).meta(meta);
+}
+
+const integerRegex = /^-?\d+$/;
+
+export function integerField(meta: FormInputMeta) {
+  return z
+    .string()
+    .regex(integerRegex, "Must be a whole number")
+    .transform(Number)
     .meta(meta);
 }
 

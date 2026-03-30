@@ -12,7 +12,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
-import { textField, usernameField } from "@/lib/allowed-chars";
+import {
+  enumField,
+  integerField,
+  textField,
+  usernameField,
+} from "@/lib/allowed-chars";
 import { myNanoid, NANO_ID_LENGTH } from "@/lib/constants";
 
 // ─── USER TABLE ──────────────────────────────────────────────────────────────
@@ -213,13 +218,6 @@ export const insertWidgetSchema = createInsertSchema(widget, {
   })
     .min(2, "Must be at least 2 characters")
     .max(100, "Cannot exceed 100 characters"),
-  category: z
-    .enum(widgetCategoryEnum.enumValues)
-    .default("basic")
-    .meta({ label: "Category" }),
-  amount: z
-    .number()
-    .int("Must be a whole number")
-    .min(0, "Cannot be negative")
-    .meta({ label: "Amount" }),
+  category: enumField(widgetCategoryEnum.enumValues, { label: "Category" }),
+  amount: integerField({ label: "Amount" }),
 }).strict();
