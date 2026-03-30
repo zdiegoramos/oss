@@ -65,6 +65,24 @@ const userRouter = {
     }
     return { user };
   }),
+
+  updateEmail: os
+    .input(z.object({ email: z.email() }))
+    .handler(async ({ input }) => {
+      const [firstUser] = await db.select().from(userTable).limit(1);
+      if (!firstUser) {
+        throw new Error("No user found");
+      }
+      const [updated] = await db
+        .update(userTable)
+        .set({ email: input.email })
+        .where(eq(userTable.id, firstUser.id))
+        .returning();
+      if (!updated) {
+        throw new Error("Failed to update email");
+      }
+      return { user: updated };
+    }),
 };
 
 const bugRouter = {
