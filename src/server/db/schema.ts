@@ -56,8 +56,15 @@ export const userRelations = relations(user, ({ many }) => ({
 }));
 
 export const userAllowedCharacters = {
-  username: {},
-  email: {},
+  username: {
+    letters: true,
+    numbers: true,
+  },
+  email: {
+    letters: true,
+    numbers: true,
+    punctuation: true,
+  },
 } as const satisfies Partial<
   Record<keyof typeof user.$inferInsert, AllowedCharacters>
 >;
@@ -74,12 +81,19 @@ export const insertUserSchema = createInsertSchema(user, {
       /^[a-z0-9]+(_[a-z0-9]+)*$/,
       "Only lowercase letters, numbers, and underscores — no leading or trailing underscores"
     )
-    .meta({ label: "Username", placeholder: "my_username" }),
+    .meta({
+      label: "Username",
+      placeholder: "my_username",
+      allowedCharacters: userAllowedCharacters.username,
+    }),
   email: z
-    .string()
     .email("Must be a valid email address")
     .max(254, "Cannot exceed 254 characters")
-    .meta({ label: "Email", placeholder: "email@example.com" }),
+    .meta({
+      label: "Email",
+      placeholder: "email@example.com",
+      allowedCharacters: userAllowedCharacters.email,
+    }),
 }).strict();
 
 // ─── EXAMPLE BUSINESS TABLE ─────────────────────────────────────────────────

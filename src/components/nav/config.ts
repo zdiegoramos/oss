@@ -1,4 +1,10 @@
-import { FileText, HomeIcon, type LucideIcon, Receipt } from "lucide-react";
+import {
+  FileText,
+  HomeIcon,
+  LayoutGrid,
+  type LucideIcon,
+  Receipt,
+} from "lucide-react";
 
 /**
  * Navigation route configuration
@@ -26,6 +32,12 @@ export const USER_NAV_ROUTES = [
     name: "Dashboard",
     icon: HomeIcon,
     activePatterns: ["/dashboard"],
+  },
+  {
+    href: "/examples/choice-input",
+    name: "Choice Input",
+    icon: LayoutGrid,
+    activePatterns: ["/examples/choice-input", "/examples/choice-input/*"],
   },
   {
     href: "/profile",
