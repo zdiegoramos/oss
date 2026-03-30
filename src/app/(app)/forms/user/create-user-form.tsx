@@ -6,9 +6,14 @@ import { toast } from "sonner";
 import { Form, useAppForm } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { orpc } from "@/lib/orpc";
-import { createUserFormSchema } from "./schema";
+import { insertUserSchema } from "@/server/db/schema";
 
-export function CreateUserForm({ redirect }: { redirect: string }) {
+export const createUserFormSchema = insertUserSchema.pick({
+  username: true,
+  email: true,
+});
+
+export function CreateUserForm() {
   const router = useRouter();
 
   const form = useAppForm({
@@ -24,7 +29,7 @@ export function CreateUserForm({ redirect }: { redirect: string }) {
         toast("Creating user...");
         await orpc.user.create(value);
         toast("User created, redirecting...");
-        router.push(redirect);
+        router.push("/");
       } catch {
         toast("Error creating user");
       }

@@ -6,7 +6,13 @@ import { Form, useAppForm } from "@/components/form";
 import { FormFooter } from "@/components/form/form-footer";
 import { orpc } from "@/lib/orpc";
 import type { WidgetCategory } from "@/server/db/schema";
-import { createWidgetSchema } from "./schema";
+import { insertWidgetSchema } from "@/server/db/schema";
+
+export const createWidgetSchema = insertWidgetSchema.pick({
+  name: true,
+  category: true,
+  amount: true,
+});
 
 const categoryItems: [string, string][] = [
   ["basic", "Basic"],

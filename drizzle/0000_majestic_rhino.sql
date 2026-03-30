@@ -1,5 +1,26 @@
+CREATE TYPE "public"."plan_type" AS ENUM('basic', 'pro');--> statement-breakpoint
 CREATE TYPE "public"."post_status" AS ENUM('draft', 'published', 'archived');--> statement-breakpoint
 CREATE TYPE "public"."widget_category" AS ENUM('basic', 'advanced', 'premium');--> statement-breakpoint
+CREATE TABLE "bug" (
+	"id" bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "bug_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+	"nano_id" varchar(11) NOT NULL,
+	"created_at" timestamp with time zone NOT NULL,
+	"updated_at" timestamp with time zone NOT NULL,
+	"title" varchar(200) NOT NULL,
+	"description" varchar(1000) NOT NULL,
+	CONSTRAINT "bug_nano_id_unique" UNIQUE("nano_id")
+);
+--> statement-breakpoint
+CREATE TABLE "plan" (
+	"id" bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "plan_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+	"nano_id" varchar(11) NOT NULL,
+	"created_at" timestamp with time zone NOT NULL,
+	"updated_at" timestamp with time zone NOT NULL,
+	"type" "plan_type" NOT NULL,
+	"user_id" bigint NOT NULL,
+	CONSTRAINT "plan_nano_id_unique" UNIQUE("nano_id")
+);
+--> statement-breakpoint
 CREATE TABLE "post" (
 	"id" bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "post_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
 	"nano_id" varchar(11) NOT NULL,
@@ -35,7 +56,11 @@ CREATE TABLE "widget" (
 	CONSTRAINT "widget_nano_id_unique" UNIQUE("nano_id")
 );
 --> statement-breakpoint
+ALTER TABLE "plan" ADD CONSTRAINT "plan_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "post" ADD CONSTRAINT "post_creator_id_user_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "bug_nano_id_idx" ON "bug" USING btree ("nano_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "plan_nano_id_idx" ON "plan" USING btree ("nano_id");--> statement-breakpoint
+CREATE INDEX "plan_user_id_idx" ON "plan" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "post_creator_id_idx" ON "post" USING btree ("creator_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "post_nano_id_idx" ON "post" USING btree ("nano_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "user_nano_id_idx" ON "user" USING btree ("nano_id");--> statement-breakpoint

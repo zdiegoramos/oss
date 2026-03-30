@@ -2,7 +2,7 @@
 
 import { formOptions } from "@tanstack/react-form";
 import { useAppForm, withForm } from "@/components/form";
-import { createUserFormSchema } from "../input/form/schema";
+import { createUserFormSchema } from "../user/create-user-form";
 
 const formOpts = formOptions({
   defaultValues: {

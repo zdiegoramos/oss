@@ -1,4 +1,4 @@
-import { CreateUserForm } from "./form";
+import { Parent } from "./nested-form";
 
 export default function InputExamplePage() {
   return (
@@ -7,7 +7,7 @@ export default function InputExamplePage() {
       <p className="mb-6 text-muted-foreground">
         Demonstrates the <code>TextInput</code> component with form validation.
       </p>
-      <CreateUserForm redirect="/examples/input" />
+      <Parent />
     </main>
   );
 }

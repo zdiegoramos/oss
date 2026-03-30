@@ -4,7 +4,12 @@ import { toast } from "sonner";
 import { Form, useAppForm } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { orpc } from "@/lib/orpc";
-import { reportBugSchema } from "./schema";
+import { insertBugSchema } from "@/server/db/schema";
+
+export const reportBugSchema = insertBugSchema.pick({
+  title: true,
+  description: true,
+});
 
 const DESCRIPTION_MAX = 1000;
 

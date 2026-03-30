@@ -5,7 +5,11 @@ import { Form, useAppForm } from "@/components/form";
 import { FormFooter } from "@/components/form/form-footer";
 import { orpc } from "@/lib/orpc";
 import type { PlanType } from "@/server/db/schema";
-import { selectPlanFormSchema } from "./schema";
+import { insertPlanSchema } from "@/server/db/schema";
+
+export const selectPlanFormSchema = insertPlanSchema.pick({
+  type: true,
+});
 
 const planItems: [string, string][] = [
   ["basic", "Basic — $9.99/mo"],
