@@ -6,7 +6,10 @@ import {
   AmortizationInputs,
   DEFAULT_INPUTS,
 } from "./components/amortization-inputs";
+import { AmortizationLineChart } from "./components/amortization-line-chart";
+import { AmortizationPieChart } from "./components/amortization-pie-chart";
 import { AmortizationSummary } from "./components/amortization-summary";
+import { AmortizationTable } from "./components/amortization-table";
 import {
   type AmortizationResult,
   calculateAmortization,
@@ -98,9 +101,19 @@ export default function AmortizationPage() {
           />
         </div>
 
-        <div>
+        <div className="flex flex-col gap-6">
           {result ? (
-            <AmortizationSummary result={result} />
+            <>
+              <AmortizationSummary result={result} />
+              <AmortizationPieChart
+                totalInterest={result.totalInterest}
+                totalPayments={result.totalPayments}
+              />
+              <AmortizationLineChart
+                monthlyPayment={result.monthlyPayment}
+                yearlySchedule={result.yearlySchedule}
+              />
+            </>
           ) : (
             <div className="flex h-full items-center justify-center rounded-2xl border border-dashed p-8 text-center text-muted-foreground text-sm">
               Enter your loan details and click Calculate.
@@ -108,6 +121,15 @@ export default function AmortizationPage() {
           )}
         </div>
       </div>
+
+      {result && (
+        <div className="mt-6">
+          <AmortizationTable
+            monthlySchedule={result.monthlySchedule}
+            yearlySchedule={result.yearlySchedule}
+          />
+        </div>
+      )}
     </main>
   );
 }
