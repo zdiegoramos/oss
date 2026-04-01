@@ -2,9 +2,14 @@
 
 import { z } from "zod/v4";
 import { Form, useAppForm } from "@/components/form";
+import { textField } from "@/lib/allowed-chars";
 
 const schema = z.object({
-  value: z.string().meta({ label: "Text", placeholder: "Enter some text…" }),
+  value: textField({
+    chars: { preset: "prose" },
+    label: "Text",
+    placeholder: "Enter some text…",
+  }),
 });
 
 export function TextInputDemo() {
