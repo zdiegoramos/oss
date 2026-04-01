@@ -7,6 +7,7 @@ import { isRouteActive } from "@/components/nav/config";
 import { WireframeNav } from "@/components/ui/wireframe";
 import { useAppState } from "@/providers/app-state-provider";
 import { FORMS_NAV } from "./forms";
+import { PRIMITIVES_NAV } from "./primitives";
 import { TOOLS_NAV } from "./tools";
 
 export type NavItem = {
@@ -86,6 +87,19 @@ export function FormsNav() {
         activePatterns,
       }))}
       label="Form"
+    />
+  );
+}
+
+export function PrimitivesNav() {
+  return (
+    <SectionNav
+      items={PRIMITIVES_NAV.map(({ name, href, activePatterns }) => ({
+        name,
+        href,
+        activePatterns,
+      }))}
+      label="Primitive"
     />
   );
 }
