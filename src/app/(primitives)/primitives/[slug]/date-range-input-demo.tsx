@@ -12,7 +12,10 @@ const schema = z.object({
 export function DateRangeInputDemo() {
   const form = useAppForm({
     defaultValues: {
-      value: undefined as unknown as { from: Date; to: Date },
+      value: {
+        from: new Date(),
+        to: new Date(),
+      },
     },
     validators: { onChange: schema },
     onSubmit: async () => {

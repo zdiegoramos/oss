@@ -1,7 +1,70 @@
 import type { ClassValue } from "clsx";
 import { cn } from "@/lib/utils";
 
-const SAFE_AREA_INSETS_ENABLED_BY_DEFAULT = false;
+const defaults = {
+  safeAreas: true,
+  cssVariables: {
+    "--sticky-nav-height": 12,
+    "--sticky-nav-top-offset": 0,
+
+    "--top-nav-height": 16,
+    "--top-nav-left-offset": 0,
+    "--top-nav-right-offset": 0,
+    "--top-nav-top-offset": 0,
+    "--top-nav-bottom-offset": 0,
+
+    "--bottom-nav-height": 14,
+    "--bottom-nav-left-offset": 0,
+    "--bottom-nav-right-offset": 0,
+    "--bottom-nav-top-offset": 0,
+    "--bottom-nav-bottom-offset": 0,
+
+    "--left-sidebar-width-collapsed": 16,
+    "--left-sidebar-width-expanded": 52,
+    "--left-sidebar-left-offset": 0,
+    "--left-sidebar-right-offset": 0,
+    "--left-sidebar-top-offset": 0,
+    "--left-sidebar-bottom-offset": 0,
+
+    "--right-sidebar-width-collapsed": 16,
+    "--right-sidebar-width-expanded": 52,
+    "--right-sidebar-left-offset": 0,
+    "--right-sidebar-right-offset": 0,
+    "--right-sidebar-top-offset": 0,
+    "--right-sidebar-bottom-offset": 0,
+  },
+  corners: {
+    topLeft: "sidebar",
+    topRight: "sidebar",
+    bottomLeft: "sidebar",
+    bottomRight: "sidebar",
+    responsive: {
+      left: "sidebar",
+      right: "sidebar",
+    },
+  },
+} as const satisfies WireframeConfig;
+
+type WireframeCornerOptions = "navbar" | "sidebar";
+
+type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
+export type WireframeConfig = {
+  safeAreas: boolean;
+  cssVariables: Record<WireframeCSSVariables, string | number>;
+  corners: {
+    topLeft: WireframeCornerOptions;
+    topRight: WireframeCornerOptions;
+    bottomLeft: WireframeCornerOptions;
+    bottomRight: WireframeCornerOptions;
+    responsive: {
+      left: WireframeCornerOptions;
+      right: WireframeCornerOptions;
+    };
+  };
+};
 
 const defaultConfig: ClassValue[] = [
   // NO BOTTOM NAV, ADD BOTTOM SAFE AREA INSET
@@ -164,18 +227,16 @@ const cornersConfig = {
   },
 } as const;
 
-type WireframeCornerOptions = "navbar" | "sidebar";
-
 function tailwindSpacing(value: number) {
   return `calc(var(--spacing) * ${value})`;
 }
 
-function parseCssVariable(value?: string | number, defaultValue = "0px") {
+function parseCssVariable(value: string | number) {
   if (typeof value === "number") {
     return tailwindSpacing(value);
   }
 
-  return value ?? defaultValue;
+  return value;
 }
 
 function SafeAreaInsetTop({
@@ -244,127 +305,111 @@ function Wireframe({
   config,
   ...props
 }: React.ComponentProps<"div"> & {
-  config?: {
-    safeAreas?: boolean;
-    cssVariables?: Partial<Record<WireframeCSSVariables, string | number>>;
-    corners?: {
-      topLeft?: WireframeCornerOptions;
-      topRight?: WireframeCornerOptions;
-      bottomLeft?: WireframeCornerOptions;
-      bottomRight?: WireframeCornerOptions;
-      responsive?: {
-        left?: WireframeCornerOptions;
-        right?: WireframeCornerOptions;
-      };
-    };
-  };
+  config?: DeepPartial<WireframeConfig>;
 }) {
-  const safeAreasEnabled =
-    config?.safeAreas ?? SAFE_AREA_INSETS_ENABLED_BY_DEFAULT;
+  const safeAreasEnabled = config?.safeAreas ?? defaults.safeAreas;
+  const cssVars = { ...defaults.cssVariables, ...config?.cssVariables };
+  const corners = {
+    ...defaults.corners,
+    ...config?.corners,
+    responsive: {
+      ...defaults.corners.responsive,
+      ...config?.corners?.responsive,
+    },
+  };
 
   return (
     <div
       className={cn(
         defaultConfig,
-        cornersConfig[config?.corners?.topLeft ?? "sidebar"].topLeft,
-        cornersConfig[config?.corners?.topRight ?? "sidebar"].topRight,
-        cornersConfig[config?.corners?.bottomLeft ?? "sidebar"].bottomLeft,
-        cornersConfig[config?.corners?.bottomRight ?? "sidebar"].bottomRight,
-        responsiveCornersConfig[config?.corners?.responsive?.left ?? "sidebar"]
-          .left,
-        responsiveCornersConfig[config?.corners?.responsive?.right ?? "sidebar"]
-          .right,
+        cornersConfig[corners.topLeft].topLeft,
+        cornersConfig[corners.topRight].topRight,
+        cornersConfig[corners.bottomLeft].bottomLeft,
+        cornersConfig[corners.bottomRight].bottomRight,
+        responsiveCornersConfig[corners.responsive.left].left,
+        responsiveCornersConfig[corners.responsive.right].right,
         className
       )}
       style={
         {
           // STICKY NAV
           "--sticky-nav-height": parseCssVariable(
-            config?.cssVariables?.["--sticky-nav-height"],
-            tailwindSpacing(12)
+            cssVars["--sticky-nav-height"]
           ),
           "--sticky-nav-top-offset": parseCssVariable(
-            config?.cssVariables?.["--sticky-nav-top-offset"]
+            cssVars["--sticky-nav-top-offset"]
           ),
 
           // TOP NAV
-          "--top-nav-height": parseCssVariable(
-            config?.cssVariables?.["--top-nav-height"],
-            tailwindSpacing(16)
-          ),
+          "--top-nav-height": parseCssVariable(cssVars["--top-nav-height"]),
           "--top-nav-left-offset": parseCssVariable(
-            config?.cssVariables?.["--top-nav-left-offset"]
+            cssVars["--top-nav-left-offset"]
           ),
           "--top-nav-right-offset": parseCssVariable(
-            config?.cssVariables?.["--top-nav-right-offset"]
+            cssVars["--top-nav-right-offset"]
           ),
           "--top-nav-top-offset": parseCssVariable(
-            config?.cssVariables?.["--top-nav-top-offset"]
+            cssVars["--top-nav-top-offset"]
           ),
           "--top-nav-bottom-offset": parseCssVariable(
-            config?.cssVariables?.["--top-nav-bottom-offset"]
+            cssVars["--top-nav-bottom-offset"]
           ),
 
           // BOTTOM NAV
           "--bottom-nav-height": parseCssVariable(
-            config?.cssVariables?.["--bottom-nav-height"],
-            tailwindSpacing(14)
+            cssVars["--bottom-nav-height"]
           ),
           "--bottom-nav-left-offset": parseCssVariable(
-            config?.cssVariables?.["--bottom-nav-left-offset"]
+            cssVars["--bottom-nav-left-offset"]
           ),
           "--bottom-nav-right-offset": parseCssVariable(
-            config?.cssVariables?.["--bottom-nav-right-offset"]
+            cssVars["--bottom-nav-right-offset"]
           ),
           "--bottom-nav-top-offset": parseCssVariable(
-            config?.cssVariables?.["--bottom-nav-top-offset"]
+            cssVars["--bottom-nav-top-offset"]
           ),
           "--bottom-nav-bottom-offset": parseCssVariable(
-            config?.cssVariables?.["--bottom-nav-bottom-offset"]
+            cssVars["--bottom-nav-bottom-offset"]
           ),
 
           // LEFT SIDEBAR
           "--left-sidebar-width-collapsed": parseCssVariable(
-            config?.cssVariables?.["--left-sidebar-width-collapsed"],
-            tailwindSpacing(16)
+            cssVars["--left-sidebar-width-collapsed"]
           ),
           "--left-sidebar-width-expanded": parseCssVariable(
-            config?.cssVariables?.["--left-sidebar-width-expanded"],
-            tailwindSpacing(52)
+            cssVars["--left-sidebar-width-expanded"]
           ),
           "--left-sidebar-left-offset": parseCssVariable(
-            config?.cssVariables?.["--left-sidebar-left-offset"]
+            cssVars["--left-sidebar-left-offset"]
           ),
           "--left-sidebar-right-offset": parseCssVariable(
-            config?.cssVariables?.["--left-sidebar-right-offset"]
+            cssVars["--left-sidebar-right-offset"]
           ),
           "--left-sidebar-top-offset": parseCssVariable(
-            config?.cssVariables?.["--left-sidebar-top-offset"]
+            cssVars["--left-sidebar-top-offset"]
           ),
           "--left-sidebar-bottom-offset": parseCssVariable(
-            config?.cssVariables?.["--left-sidebar-bottom-offset"]
+            cssVars["--left-sidebar-bottom-offset"]
           ),
 
           // RIGHT SIDEBAR
           "--right-sidebar-width-expanded": parseCssVariable(
-            config?.cssVariables?.["--right-sidebar-width-expanded"],
-            tailwindSpacing(52)
+            cssVars["--right-sidebar-width-expanded"]
           ),
           "--right-sidebar-width-collapsed": parseCssVariable(
-            config?.cssVariables?.["--right-sidebar-width-collapsed"],
-            tailwindSpacing(16)
+            cssVars["--right-sidebar-width-collapsed"]
           ),
           "--right-sidebar-left-offset": parseCssVariable(
-            config?.cssVariables?.["--right-sidebar-left-offset"]
+            cssVars["--right-sidebar-left-offset"]
           ),
           "--right-sidebar-right-offset": parseCssVariable(
-            config?.cssVariables?.["--right-sidebar-right-offset"]
+            cssVars["--right-sidebar-right-offset"]
           ),
           "--right-sidebar-top-offset": parseCssVariable(
-            config?.cssVariables?.["--right-sidebar-top-offset"]
+            cssVars["--right-sidebar-top-offset"]
           ),
           "--right-sidebar-bottom-offset": parseCssVariable(
-            config?.cssVariables?.["--right-sidebar-bottom-offset"]
+            cssVars["--right-sidebar-bottom-offset"]
           ),
         } satisfies Record<WireframeCSSVariables, string> as React.CSSProperties
       }

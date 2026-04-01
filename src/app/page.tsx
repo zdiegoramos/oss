@@ -1,13 +1,13 @@
 "use client";
 
 import { UserNavigation } from "@/components/nav/navigation";
-import { WireframeDefault } from "@/components/wireframe-default";
+import { Wireframe } from "@/components/ui/wireframe";
 import { APP } from "@/lib/metadata";
 import { Providers } from "@/providers";
 
 export default function Home() {
   return (
-    <WireframeDefault>
+    <Wireframe>
       <Providers>
         <UserNavigation />
         <main className="absolute inset-0 flex flex-col items-center justify-center gap-6 p-4">
@@ -48,6 +48,6 @@ export default function Home() {
           </dl>
         </main>
       </Providers>
-    </WireframeDefault>
+    </Wireframe>
   );
 }

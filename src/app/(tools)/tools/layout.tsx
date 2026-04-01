@@ -1,6 +1,6 @@
 import { ToolsNav } from "@/components/nav/section-nav";
 import { ToolsSidebar } from "@/components/nav/tools-sidebar";
-import { WireframeDefault } from "@/components/wireframe-default";
+import { Wireframe } from "@/components/ui/wireframe";
 import { Providers } from "@/providers";
 
 export default function ToolsLayout({
@@ -9,12 +9,12 @@ export default function ToolsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <WireframeDefault>
+    <Wireframe>
       <Providers>
         <ToolsSidebar />
         <ToolsNav />
         {children}
       </Providers>
-    </WireframeDefault>
+    </Wireframe>
   );
 }

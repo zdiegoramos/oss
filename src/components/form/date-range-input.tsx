@@ -4,7 +4,7 @@ import type { Matcher } from "react-day-picker";
 import { es } from "react-day-picker/locale";
 import type { ZodType } from "zod/v4";
 import { FieldInfo } from "@/components/form/field-info";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import {
@@ -40,15 +40,9 @@ export function DateRangeInput({
       <Label htmlFor={field.name} schema={schema} />
       <Popover>
         <div>
-          <PopoverTrigger>
-            <Button
-              className="inline-flex w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
-              data-empty={from instanceof Date === false}
-              variant="outline"
-            >
-              <CalendarIcon />
-              {buttonText}
-            </Button>
+          <PopoverTrigger className={buttonVariants({ variant: "outline" })}>
+            <CalendarIcon />
+            {buttonText}
           </PopoverTrigger>
         </div>
         <PopoverContent className="w-auto p-0">

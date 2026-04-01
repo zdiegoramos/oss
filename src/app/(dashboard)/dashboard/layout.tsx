@@ -7,14 +7,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Wireframe
-      config={{
-        corners: {
-          topLeft: "navbar",
-          bottomLeft: "navbar",
-        },
-      }}
-    >
+    <Wireframe>
       <AppSidebar />
       <div className="px-4 pt-4">{children}</div>
     </Wireframe>

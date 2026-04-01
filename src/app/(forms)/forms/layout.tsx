@@ -1,6 +1,6 @@
 import { FormsSidebar } from "@/components/nav/forms-sidebar";
 import { FormsNav } from "@/components/nav/section-nav";
-import { WireframeDefault } from "@/components/wireframe-default";
+import { Wireframe } from "@/components/ui/wireframe";
 import { Providers } from "@/providers";
 
 export default function FormsLayout({
@@ -9,12 +9,12 @@ export default function FormsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <WireframeDefault>
+    <Wireframe>
       <Providers>
         <FormsSidebar />
         <FormsNav />
         {children}
       </Providers>
-    </WireframeDefault>
+    </Wireframe>
   );
 }
