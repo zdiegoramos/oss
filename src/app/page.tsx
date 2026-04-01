@@ -2,6 +2,7 @@
 
 import { UserNavigation } from "@/components/nav/navigation";
 import { WireframeDefault } from "@/components/wireframe-default";
+import { APP } from "@/lib/metadata";
 import { Providers } from "@/providers";
 
 export default function Home() {
@@ -17,11 +18,11 @@ export default function Home() {
             </p>
             <a
               className="text-muted-foreground text-sm underline underline-offset-4 transition-colors hover:text-foreground"
-              href="https://github.com/zdiegoramos/frontend"
+              href={APP.github.url}
               rel="noreferrer"
               target="_blank"
             >
-              github.com/zdiegoramos/frontend
+              {APP.github.repo}
             </a>
           </div>
 

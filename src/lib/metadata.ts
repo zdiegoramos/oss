@@ -1,5 +1,9 @@
 export const APP = {
   displayName: "My App",
+  github: {
+    repo: "zdiegoramos/oss",
+    url: "https://github.com/zdiegoramos/oss",
+  },
   shortName: "App",
   description: "App description",
   defaultOgImagePath: "/opengraph-image",

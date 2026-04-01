@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { isRouteActive } from "@/components/nav/config";
 import { Item, ItemGroup, ItemMedia } from "@/components/ui/item";
 import { WireframeSidebar } from "@/components/ui/wireframe";
+import { APP } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 import { useAppState } from "@/providers/app-state-provider";
 import { FORMS_NAV } from "./forms";
@@ -72,7 +73,7 @@ export function FormsSidebar() {
 
         <a
           className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm transition-colors hover:bg-muted hover:text-foreground"
-          href="https://github.com/zdiegoramos/frontend"
+          href={APP.github.url}
           rel="noopener noreferrer"
           target="_blank"
         >
