@@ -244,14 +244,22 @@ const invoiceRouter = {
       insertInvoiceSchema.omit({
         createdAt: true,
         updatedAt: true,
+        nanoId: true,
       })
     )
     .handler(async ({ input }) => {
-      const [record] = await db.insert(invoiceTable).values(input).returning();
-      if (!record) {
-        throw new Error("Failed to create invoice");
+      try {
+        const [record] = await db
+          .insert(invoiceTable)
+          .values(input)
+          .returning();
+        if (!record) {
+          throw new Error("Failed to create invoice");
+        }
+        return { invoice: record };
+      } catch (error) {
+        console.error("Error creating invoice:", error);
       }
-      return { invoice: record };
     }),
 
   list: os.handler(async () => {
