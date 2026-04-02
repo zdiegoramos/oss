@@ -1,7 +1,6 @@
 import { ToolsNav } from "@/components/nav/section-nav";
 import { ToolsSidebar } from "@/components/nav/tools-sidebar";
 import { Wireframe } from "@/components/ui/wireframe";
-import { Providers } from "@/providers";
 
 export default function ToolsLayout({
   children,
@@ -10,11 +9,9 @@ export default function ToolsLayout({
 }) {
   return (
     <Wireframe>
-      <Providers>
-        <ToolsSidebar />
-        <ToolsNav />
-        {children}
-      </Providers>
+      <ToolsSidebar />
+      <ToolsNav />
+      {children}
     </Wireframe>
   );
 }

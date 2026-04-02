@@ -1,7 +1,6 @@
 import { PrimitivesSidebar } from "@/components/nav/primitives-sidebar";
 import { PrimitivesNav } from "@/components/nav/section-nav";
 import { Wireframe } from "@/components/ui/wireframe";
-import { Providers } from "@/providers";
 
 export default function PrimitivesLayout({
   children,
@@ -16,11 +15,9 @@ export default function PrimitivesLayout({
         },
       }}
     >
-      <Providers>
-        <PrimitivesSidebar />
-        <PrimitivesNav />
-        {children}
-      </Providers>
+      <PrimitivesSidebar />
+      <PrimitivesNav />
+      {children}
     </Wireframe>
   );
 }

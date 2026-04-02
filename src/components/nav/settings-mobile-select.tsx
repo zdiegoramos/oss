@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { useWireframe } from "@/components/ui/wireframe";
 import { cn } from "@/lib/utils";
-import { useAppState } from "@/providers/app-state-provider";
 
 type SettingsNavItem = {
   title: string;
@@ -25,7 +25,7 @@ export function SettingsMobileSelect({
 }: SettingsMobileSelectProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isMobile } = useAppState();
+  const { isMobile } = useWireframe();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     router.push(event.target.value);

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { isRouteActive } from "@/components/nav/config";
 import { WireframeNav } from "@/components/ui/wireframe";
-import { useAppState } from "@/providers/app-state-provider";
 import { FORMS_NAV } from "./forms";
 import { PRIMITIVES_NAV } from "./primitives";
 import { TOOLS_NAV } from "./tools";
@@ -25,18 +24,17 @@ export function SectionNav({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isMobile } = useAppState();
-
-  if (!isMobile) {
-    return null;
-  }
 
   const currentHref = items.find((item) =>
     isRouteActive(pathname, item.activePatterns)
   )?.href;
 
   return (
-    <WireframeNav className="border-t bg-background" position="bottom">
+    <WireframeNav
+      className="border-t bg-background"
+      hide="desktop"
+      position="bottom"
+    >
       <div className="flex h-full items-center gap-2 px-4">
         <Link
           className="flex shrink-0 items-center gap-1 rounded-md p-2 text-muted-foreground text-sm hover:bg-muted hover:text-foreground"

@@ -13,7 +13,6 @@ import { NavbarLinks } from "@/components/nav/navbar-links";
 import { UserMenu } from "@/components/nav/user-menu";
 import { WireframeNav } from "@/components/ui/wireframe";
 import { cn } from "@/lib/utils";
-import { useAppState } from "@/providers/app-state-provider";
 
 function AppNavbar({
   children,
@@ -45,30 +44,24 @@ function AppNavbar({
 }
 
 function Navigation({ routes }: { routes: NavRoutes }) {
-  const { isMobile } = useAppState();
-
   return (
     <>
-      {isMobile ? (
-        <>
-          {/* Mobile: Top nav with logo only */}
-          <WireframeNav position="top">
-            <MobileTopNav />
-          </WireframeNav>
+      {/* Mobile: Top nav with logo only */}
+      <WireframeNav hide="desktop" position="top">
+        <MobileTopNav />
+      </WireframeNav>
 
-          {/* Mobile: Bottom nav with icons and user menu */}
-          <WireframeNav position="bottom">
-            <MobileBottomNav routes={routes} />
-          </WireframeNav>
-        </>
-      ) : (
-        // Desktop: Top nav with full navbar
-        <WireframeNav position="top">
-          <AppNavbar>
-            <NavbarLinks routes={routes} />
-          </AppNavbar>
-        </WireframeNav>
-      )}
+      {/* Mobile: Bottom nav with icons and user menu */}
+      <WireframeNav hide="desktop" position="bottom">
+        <MobileBottomNav routes={routes} />
+      </WireframeNav>
+
+      {/* Desktop: Top nav with full navbar */}
+      <WireframeNav hide="mobile" position="top">
+        <AppNavbar>
+          <NavbarLinks routes={routes} />
+        </AppNavbar>
+      </WireframeNav>
     </>
   );
 }

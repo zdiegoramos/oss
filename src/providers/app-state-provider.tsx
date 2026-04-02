@@ -2,27 +2,18 @@
 
 import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
-import { MOBILE_BREAKPOINT } from "@/lib/constants";
 
 type AppStateContext =
   | {
-      isMobile: boolean;
+      hello: string;
     }
   | undefined;
 
 const AppStateContext = createContext<AppStateContext>(undefined);
 
-export function AppStateProvider({
-  children,
-  screenWidth,
-}: {
-  children: ReactNode;
-  screenWidth: number;
-}) {
-  const isMobile = screenWidth < MOBILE_BREAKPOINT;
-
+export function AppStateProvider({ children }: { children: ReactNode }) {
   return (
-    <AppStateContext.Provider value={{ isMobile }}>
+    <AppStateContext.Provider value={{ hello: "world" }}>
       {children}
     </AppStateContext.Provider>
   );

@@ -1,7 +1,6 @@
 import { FormsSidebar } from "@/components/nav/forms-sidebar";
 import { FormsNav } from "@/components/nav/section-nav";
 import { Wireframe } from "@/components/ui/wireframe";
-import { Providers } from "@/providers";
 
 export default function FormsLayout({
   children,
@@ -10,11 +9,9 @@ export default function FormsLayout({
 }) {
   return (
     <Wireframe>
-      <Providers>
-        <FormsSidebar />
-        <FormsNav />
-        {children}
-      </Providers>
+      <FormsSidebar />
+      <FormsNav />
+      {children}
     </Wireframe>
   );
 }

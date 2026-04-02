@@ -14,19 +14,17 @@ import {
 } from "@/components/ui/wireframe";
 import { APP } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
-import { useAppState } from "@/providers/app-state-provider";
 import { PRIMITIVES_NAV } from "./primitives";
 
 export function PrimitivesSidebar() {
   const pathname = usePathname();
-  const { isMobile } = useAppState();
-
-  if (isMobile) {
-    return null;
-  }
 
   return (
-    <WireframeSidebar className="border-r bg-background" position="left">
+    <WireframeSidebar
+      className="border-r bg-background"
+      hide="mobile"
+      position="left"
+    >
       <WireframeSidebarHeader className="p-3">
         <div className="px-3 py-2">
           <Link

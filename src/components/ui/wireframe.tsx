@@ -1,5 +1,40 @@
+"use client";
+
 import type { ClassValue } from "clsx";
+import { createContext, useContext, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+
+const WF_NAV_BREAKPOINT = 640; // matches --breakpoint-wf-nav: 40rem
+
+type WireframeContextValue = {
+  windowWidth: number;
+  isMobile: boolean;
+};
+
+const WireframeContext = createContext<WireframeContextValue | undefined>(
+  undefined
+);
+
+export function useWireframe() {
+  const context = useContext(WireframeContext);
+  if (!context) {
+    throw new Error("useWireframe must be used within a Wireframe");
+  }
+  return context;
+}
+
+function useWindowWidth() {
+  const [width, setWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  return width;
+}
 
 const defaults = {
   safeAreas: true,
@@ -307,6 +342,13 @@ function Wireframe({
 }: React.ComponentProps<"div"> & {
   config?: DeepPartial<WireframeConfig>;
 }) {
+  const windowWidth = useWindowWidth();
+
+  if (!windowWidth) {
+    return null;
+  }
+
+  const isMobile = windowWidth < WF_NAV_BREAKPOINT;
   const safeAreasEnabled = config?.safeAreas ?? defaults.safeAreas;
   const cssVars = { ...defaults.cssVariables, ...config?.cssVariables };
   const corners = {
@@ -415,16 +457,18 @@ function Wireframe({
       }
       {...props}
     >
-      {safeAreasEnabled === true && (
-        <>
-          <SafeAreaInsetTop />
-          <SafeAreaInsetBottom />
-          <SafeAreaInsetLeft />
-          <SafeAreaInsetRight />
-        </>
-      )}
+      <WireframeContext.Provider value={{ windowWidth, isMobile }}>
+        {safeAreasEnabled === true && (
+          <>
+            <SafeAreaInsetTop />
+            <SafeAreaInsetBottom />
+            <SafeAreaInsetLeft />
+            <SafeAreaInsetRight />
+          </>
+        )}
 
-      {children}
+        {children}
+      </WireframeContext.Provider>
     </div>
   );
 }
@@ -452,10 +496,19 @@ function WireframeNav({
   className,
   children,
   position = "top",
+  hide,
   ...props
 }: React.ComponentProps<"div"> & {
   position?: "top" | "bottom" | "responsive";
+  hide?: "mobile" | "desktop";
 }) {
+  const { isMobile } = useWireframe();
+  if (hide === "mobile" && isMobile) {
+    return null;
+  }
+  if (hide === "desktop" && !isMobile) {
+    return null;
+  }
   if (position === "responsive") {
     return (
       <div
@@ -585,11 +638,20 @@ function WireframeSidebar({
   children,
   collapsed = false,
   position = "left",
+  hide,
   ...props
 }: React.ComponentProps<"div"> & {
   collapsed?: boolean;
   position?: WireframeSidebarPosition;
+  hide?: "mobile" | "desktop";
 }) {
+  const { isMobile } = useWireframe();
+  if (hide === "mobile" && isMobile) {
+    return null;
+  }
+  if (hide === "desktop" && !isMobile) {
+    return null;
+  }
   return (
     <div
       className={cn(
@@ -632,6 +694,7 @@ export {
   SafeAreaInsetLeft,
   SafeAreaInsetRight,
   SafeAreaInsetTop,
+  useWindowWidth,
   Wireframe,
   WireframeNav,
   WireframeSidebar,
