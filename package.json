@@ -1,5 +1,5 @@
 {
-  "name": "stack",
+  "name": "oss",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -16,6 +16,7 @@
     "fix": "ultracite fix",
     "prepare": "husky",
     "db": "bash scripts/db.sh",
+    "db:ping": "bun scripts/ping.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
