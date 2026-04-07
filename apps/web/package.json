@@ -1,0 +1,48 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@better-auth/passkey": "catalog:",
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/tanstack-query": "catalog:",
+    "@orpc/zod": "catalog:",
+    "@oss/api": "workspace:*",
+    "@oss/auth": "workspace:*",
+    "@oss/env": "workspace:*",
+    "@oss/shared": "workspace:*",
+    "@oss/ui": "workspace:*",
+    "@polar-sh/better-auth": "catalog:",
+    "@tanstack/react-form": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "@uploadthing/react": "^7.3.3",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "next-themes": "catalog:",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sonner": "catalog:",
+    "uploadthing": "^7.7.4",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@oss/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tanstack/react-query-devtools": "^5.91.1",
+    "@types/node": "^20",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5"
+  }
+}

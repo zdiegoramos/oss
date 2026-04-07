@@ -1,2 +1,5 @@
-bunx lint-staged
-bun run typecheck
+bun test
+
+# ultracite
+#!/bin/sh
+bun x lint-staged
