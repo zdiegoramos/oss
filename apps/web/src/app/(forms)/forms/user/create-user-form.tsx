@@ -6,7 +6,6 @@ import { Form, useAppForm } from "@oss/ui/components/form";
 import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { orpc } from "@/utils/orpc";
 
 export const createUserFormSchema = insertUserSchema.pick({
 	name: true,
@@ -24,10 +23,10 @@ export function CreateUserForm() {
 		validators: {
 			onChange: createUserFormSchema,
 		},
-		onSubmit: async ({ value }) => {
+		onSubmit: () => {
 			try {
 				toast("Creating user...");
-				await orpc.user.create(value);
+
 				toast("User created, redirecting...");
 				router.push("/");
 			} catch {

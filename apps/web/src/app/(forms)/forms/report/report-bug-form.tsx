@@ -4,7 +4,6 @@ import { insertBugSchema } from "@oss/db/schema";
 import { Button } from "@oss/ui/components/button";
 import { Form, useAppForm } from "@oss/ui/components/form";
 import { toast } from "sonner";
-import { orpc } from "@/utils/orpc";
 
 export const reportBugSchema = insertBugSchema.pick({
 	title: true,
@@ -22,9 +21,8 @@ export function ReportBugForm() {
 		validators: {
 			onChange: reportBugSchema,
 		},
-		onSubmit: async ({ value }) => {
+		onSubmit: () => {
 			try {
-				await orpc.bug.create(value);
 				toast("Bug report submitted!");
 				form.reset();
 			} catch {

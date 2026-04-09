@@ -1,6 +1,6 @@
 "use client";
 
-import type { CardBrand, ExpiryMonth } from "@oss/db/schema";
+import type { CardBrand } from "@oss/db/schema";
 import { insertAddressSchema, insertCreditCardSchema } from "@oss/db/schema";
 import { Button } from "@oss/ui/components/button";
 import { Form, useAppForm } from "@oss/ui/components/form";
@@ -8,7 +8,6 @@ import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod/v4";
-import { orpc } from "@/utils/orpc";
 
 // ─── Form-level schema ────────────────────────────────────────────────────────
 
@@ -113,23 +112,11 @@ export function CreditCardForm() {
 		validators: {
 			onChange: paymentFormSchema,
 		},
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			try {
 				toast("Saving…");
-				const digits = value.cardNumber.replace(/\s/g, "");
-				await orpc.creditCard.createWithAddress({
-					cardholderName: value.cardholderName,
-					lastFourDigits: digits.slice(-4),
-					expiryMonth: value.expiryMonth as ExpiryMonth,
-					expiryYear: value.expiryYear,
-					brand: detectBrand(value.cardNumber),
-					line1: value.line1,
-					line2: value.line2,
-					city: value.city,
-					state: value.state,
-					postalCode: value.postalCode,
-					country: value.country,
-				});
+				const brand = detectBrand(value.cardNumber);
+				console.log("Detected card brand:", brand);
 				toast("Payment method saved!");
 				router.push("/");
 			} catch {

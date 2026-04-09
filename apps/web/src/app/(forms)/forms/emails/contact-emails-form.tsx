@@ -14,7 +14,6 @@ import { X } from "lucide-react";
 import { nanoid } from "nanoid";
 import { toast } from "sonner";
 import { z } from "zod/v4";
-import { orpc } from "@/utils/orpc";
 
 const MAX_EMAILS = 5;
 
@@ -38,13 +37,12 @@ export function ContactEmailsForm() {
 		validators: {
 			onChange: contactEmailsSchema,
 		},
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			try {
 				const firstEmail = value.emails[0]?.value;
 				if (!firstEmail) {
 					throw new Error("No email provided");
 				}
-				await orpc.user.updateEmail({ email: firstEmail });
 				toast("Email updated successfully.");
 			} catch {
 				toast("Error updating email.");

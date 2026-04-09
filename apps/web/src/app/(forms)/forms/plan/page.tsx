@@ -11,7 +11,7 @@ export default function Home() {
 					Select the subscription that works for you
 				</p>
 			</div>
-			<SelectPlanForm userId={BigInt(1)} />
+			<SelectPlanForm />
 		</main>
 	);
 }

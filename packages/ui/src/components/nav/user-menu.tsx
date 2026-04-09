@@ -27,7 +27,7 @@ export function UserMenu() {
 		.toUpperCase();
 
 	const handleSignOut = () => {
-		router.push("/login");
+		router.push("/");
 		router.refresh();
 	};
 

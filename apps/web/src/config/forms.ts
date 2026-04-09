@@ -5,7 +5,6 @@ import {
 	FileTextIcon,
 	LayoutListIcon,
 	MailIcon,
-	PackageIcon,
 	UserIcon,
 } from "lucide-react";
 
@@ -51,12 +50,5 @@ export const FORMS_NAV = [
 		href: "/forms/user",
 		icon: UserIcon,
 		activePatterns: ["/forms/user", "/forms/user/*"],
-	},
-	{
-		name: "Widgets",
-		description: "Create and list widgets with category and amount fields.",
-		href: "/forms/widgets",
-		icon: PackageIcon,
-		activePatterns: ["/forms/widgets", "/forms/widgets/*"],
 	},
 ] as const satisfies readonly NavRoute[];

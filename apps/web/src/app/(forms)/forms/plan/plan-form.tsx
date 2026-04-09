@@ -1,11 +1,9 @@
 "use client";
 
-import type { PlanType } from "@oss/db/schema";
 import { insertPlanSchema } from "@oss/db/schema";
 import { Form, useAppForm } from "@oss/ui/components/form";
 import { FormFooter } from "@oss/ui/components/form/form-footer";
 import { toast } from "sonner";
-import { orpc } from "@/utils/orpc";
 
 export const selectPlanFormSchema = insertPlanSchema.pick({
 	type: true,
@@ -16,7 +14,7 @@ const planItems: [string, string][] = [
 	["pro", "Pro — $19.99/mo"],
 ] as const;
 
-export function SelectPlanForm({ userId }: { userId: bigint }) {
+export function SelectPlanForm() {
 	const form = useAppForm({
 		defaultValues: {
 			type: "",
@@ -24,9 +22,8 @@ export function SelectPlanForm({ userId }: { userId: bigint }) {
 		validators: {
 			onChange: selectPlanFormSchema,
 		},
-		onSubmit: async ({ value }) => {
+		onSubmit: () => {
 			try {
-				await orpc.plan.create({ type: value.type as PlanType, userId });
 				toast("Plan selected!");
 			} catch {
 				toast("Error selecting plan");

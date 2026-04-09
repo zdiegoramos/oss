@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "@/utils/orpc.server";
 import "@/index.css";
 import { cn } from "@oss/ui/lib/utils";
 import Providers from "@/providers";

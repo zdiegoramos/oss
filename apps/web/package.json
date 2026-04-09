@@ -8,23 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "@better-auth/passkey": "catalog:",
-    "@orpc/client": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/tanstack-query": "catalog:",
-    "@orpc/zod": "catalog:",
-    "@oss/api": "workspace:*",
-    "@oss/auth": "workspace:*",
     "@oss/env": "workspace:*",
     "@oss/shared": "workspace:*",
     "@oss/ui": "workspace:*",
-    "@polar-sh/better-auth": "catalog:",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
-    "@uploadthing/react": "^7.3.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "better-auth": "catalog:",
     "dotenv": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
@@ -32,7 +21,6 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "sonner": "catalog:",
-    "uploadthing": "^7.7.4",
     "zod": "catalog:"
   },
   "devDependencies": {
