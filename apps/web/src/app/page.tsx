@@ -12,7 +12,7 @@ export default function Home() {
 				<div className="text-center">
 					<h1 className="font-bold text-3xl tracking-tight">Stack</h1>
 					<p className="mt-2 text-muted-foreground text-sm">
-						A modern full-stack Next.js starter
+						A modern full-stack Next.js starter.
 					</p>
 					<a
 						className="text-muted-foreground text-sm underline underline-offset-4 transition-colors hover:text-foreground"

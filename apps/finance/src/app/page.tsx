@@ -6,7 +6,7 @@ export default function Page() {
 			<div className="mb-6">
 				<h1 className="font-bold text-2xl">Dashboard</h1>
 				<p className="mt-1 text-muted-foreground text-sm">
-					Overview of your recorded expenses.
+					Overview of your recorded expenses
 				</p>
 			</div>
 
