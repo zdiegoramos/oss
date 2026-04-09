@@ -1,4 +1,7 @@
-# OSS by Diego Ramos
+# OSS
+
+- [finance app](https://finance.zdiego.com)
+- [oss app](https://oss.zdiego.com)
 
 In this repo I share the patterns I use for development.
 
@@ -26,3 +29,5 @@ In this repo I share the patterns I use for development.
 - [Resend](https://resend.com) + [React Email](https://react.email) — transactional email
 - [Polar](https://polar.sh) — billing
 - [Biome](https://biomejs.dev) — linting and formatting
+
+Created by [Diego](https://zdiego.com)
