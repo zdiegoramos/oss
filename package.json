@@ -58,7 +58,7 @@
     "@types/node": "^22.13.14",
     "husky": "latest",
     "lint-staged": "latest",
-    "turbo": "^2.9.4",
+    "turbo": "^2.9.5",
     "typescript": "^5",
     "ultracite": "7.4.3"
   },
