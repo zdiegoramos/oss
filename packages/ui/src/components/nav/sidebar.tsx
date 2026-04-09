@@ -1,7 +1,6 @@
 "use client";
 
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import { APP } from "@oss/shared/metadata";
 import { Item, ItemGroup, ItemMedia } from "@oss/ui/components/item";
 import {
 	WireframeSidebar,
@@ -9,15 +8,23 @@ import {
 	WireframeSidebarFooter,
 	WireframeSidebarHeader,
 } from "@oss/ui/components/wireframe";
-import { isRouteActive } from "@oss/ui/hooks/use-nav-routes";
+import { type NavRoute, useNavRoutes } from "@oss/ui/hooks/use-nav-routes";
 import { cn } from "@oss/ui/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FORMS_NAV } from "./forms";
 
-export function FormsSidebar() {
-	const pathname = usePathname();
+export function Sidebar({
+	routes,
+	title,
+	shortDesc,
+	github,
+}: {
+	routes: readonly NavRoute[];
+	title: string;
+	shortDesc: string;
+	github: string;
+}) {
+	const activeRoutes = useNavRoutes(routes);
 
 	return (
 		<WireframeSidebar
@@ -34,41 +41,44 @@ export function FormsSidebar() {
 						<ArrowLeft className="size-3" />
 						Home
 					</Link>
-					<p className="font-semibold text-sm">Forms</p>
-					<p className="text-muted-foreground text-xs">Component examples</p>
+					<p className="font-semibold text-sm">{title}</p>
+					<p className="text-muted-foreground text-xs">{shortDesc}</p>
 				</div>
 			</WireframeSidebarHeader>
 
 			<WireframeSidebarContent className="p-3">
 				<nav className="flex flex-col gap-1">
 					<ItemGroup>
-						{FORMS_NAV.map((item) => {
-							const isActive = isRouteActive(pathname, item.activePatterns);
+						{activeRoutes.map((route) => {
 							return (
 								<Item
 									className={cn(
 										"hover:bg-muted",
-										isActive && "bg-muted font-medium"
+										route.isActive && "bg-muted font-medium"
 									)}
-									key={item.href}
-									render={<Link href={item.href} />}
+									key={route.href}
+									render={<Link href={route.href} />}
 									size="sm"
 								>
 									<ItemMedia variant="icon">
-										<item.icon
+										<route.icon
 											className={cn(
 												"size-4",
-												isActive ? "text-foreground" : "text-muted-foreground"
+												route.isActive
+													? "text-foreground"
+													: "text-muted-foreground"
 											)}
 										/>
 									</ItemMedia>
 									<span
 										className={cn(
 											"text-sm",
-											isActive ? "text-foreground" : "text-muted-foreground"
+											route.isActive
+												? "text-foreground"
+												: "text-muted-foreground"
 										)}
 									>
-										{item.name}
+										{route.name}
 									</span>
 								</Item>
 							);
@@ -80,7 +90,7 @@ export function FormsSidebar() {
 			<WireframeSidebarFooter className="p-3">
 				<a
 					className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm transition-colors hover:bg-muted hover:text-foreground"
-					href={APP.github.url}
+					href={github}
 					rel="noopener noreferrer"
 					target="_blank"
 				>

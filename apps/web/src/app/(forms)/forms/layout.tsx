@@ -1,5 +1,5 @@
-import { FormsSidebar } from "@oss/ui/components/nav/forms-sidebar";
 import { Wireframe } from "@oss/ui/components/wireframe";
+import { FormsSidebar } from "@/components/form-sidebar";
 
 export default function FormsLayout({
 	children,

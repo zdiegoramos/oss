@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 export type NavRoute = {
 	/** The URL path for this route */
 	href: Route<string>;
+	description?: string;
 	/** Display name for the navigation item */
 	name: string;
 	/** Icon component to display */

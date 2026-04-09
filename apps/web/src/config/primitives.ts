@@ -1,3 +1,4 @@
+import type { NavRoute } from "@oss/ui/hooks/use-nav-routes";
 import {
 	AlignLeftIcon,
 	CalendarDaysIcon,
@@ -147,4 +148,4 @@ export const PRIMITIVES_NAV = [
 			"/primitives/username-input/*",
 		],
 	},
-] as const;
+] as const satisfies readonly NavRoute[];

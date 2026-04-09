@@ -1,3 +1,4 @@
+import type { NavRoute } from "@oss/ui/hooks/use-nav-routes";
 import {
 	BugIcon,
 	CreditCardIcon,
@@ -58,4 +59,4 @@ export const FORMS_NAV = [
 		icon: PackageIcon,
 		activePatterns: ["/forms/widgets", "/forms/widgets/*"],
 	},
-] as const;
+] as const satisfies readonly NavRoute[];

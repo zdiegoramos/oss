@@ -4,8 +4,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@oss/ui/components/card";
-import { FORMS_NAV } from "@oss/ui/components/nav/forms";
 import Link from "next/link";
+import { FORMS_NAV } from "@/config/forms";
 
 export default function FormsPage() {
 	return (
