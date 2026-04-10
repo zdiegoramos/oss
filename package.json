@@ -43,7 +43,6 @@
     "db:push": "turbo -F @oss/db db:push",
     "db:studio": "turbo -F @oss/db db:studio",
     "db:generate": "turbo -F @oss/db db:generate",
-    "db:migrate": "turbo -F @oss/db db:migrate",
     "lint": "biome check --write .",
     "check": "ultracite check",
     "fix": "ultracite fix",
