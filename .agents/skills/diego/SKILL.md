@@ -39,7 +39,13 @@ Pick the highest-priority open `afk` issue not blocked by another open issue:
 1. **Explore** — read `PRD.md`, `PLAN.md`, and the chosen issue file (already done above). For each `blocked_by:` entry verify `status: closed`. Skip to next candidate if any blocker is still open.
 2. **Plan** — decide what to change. Keep the change as small as possible.
 3. **Execute** — RGR loop: write a failing test → write implementation to pass it → refactor.
-4. **Verify** — run `bun run typecheck` && `bun run test`. Fix all failures before proceeding.
+4. **Verify** — run these checks. Fix all failures before proceeding:
+   ```bash
+   sh scripts/check-env-files.sh
+   bun x lint-staged
+   bun ts
+   bun test
+   ```
 5. **Close** — edit the issue file:
    - Change `status: open` → `status: closed` in frontmatter
    - Append a `## Completion` section describing what was done
