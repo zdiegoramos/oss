@@ -10,7 +10,10 @@
     "DATABASE_URL",
     "UPLOADTHING_TOKEN",
     "UPLOADTHING_APP_ID",
-    "RESEND_API_KEY"
+    "RESEND_API_KEY",
+    "OLLAMA_URL",
+    "CF_ACCESS_CLIENT_ID",
+    "CF_ACCESS_CLIENT_SECRET"
   ],
   "tasks": {
     "build": {

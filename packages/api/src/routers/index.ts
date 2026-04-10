@@ -246,7 +246,20 @@ const invoiceRouter = {
 				);
 			}
 			const buffer = Buffer.from(input.fileBase64, "base64");
-			const extracted = await extractInvoiceFromOllama(buffer, input.mimeType);
+			const cfClientId = process.env.CF_ACCESS_CLIENT_ID;
+			const cfClientSecret = process.env.CF_ACCESS_CLIENT_SECRET;
+			const cfHeaders =
+				cfClientId && cfClientSecret
+					? {
+							"CF-Access-Client-Id": cfClientId,
+							"CF-Access-Client-Secret": cfClientSecret,
+						}
+					: undefined;
+			const extracted = await extractInvoiceFromOllama(
+				buffer,
+				input.mimeType,
+				cfHeaders
+			);
 			return {
 				merchant: extracted.merchant,
 				date: extracted.date || new Date().toISOString().slice(0, 10),

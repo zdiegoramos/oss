@@ -16,6 +16,9 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(["development", "production", "test"])
 			.default("development"),
+		OLLAMA_URL: z.url().optional(),
+		CF_ACCESS_CLIENT_ID: z.string().optional(),
+		CF_ACCESS_CLIENT_SECRET: z.string().optional(),
 	},
 	runtimeEnv: process.env,
 	emptyStringAsUndefined: true,
