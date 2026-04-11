@@ -60,8 +60,7 @@ sudo apt update && sudo apt install cloudflared
 
 1. Sign up or log in at **dash.cloudflare.com**.
 2. Click **Add a site** and follow the wizard to point your domain's
-   nameservers at Cloudflare (or use a free `*.trycloudflare.com` quick
-   tunnel — see §7 for that shortcut).
+   nameservers at Cloudflare.
 
 > **What just happened?**  
 > Cloudflare becomes the authoritative DNS resolver for your domain.  
@@ -122,6 +121,24 @@ ping.yourdomain.com  CNAME  <UUID>.cfargotunnel.com
 
 ---
 
+## Verify the Cloudflare tunnel setup
+
+Use the Cloudflare CLI to confirm the tunnel and DNS routing are registered
+correctly.
+
+```bash
+# List your tunnels and verify the named tunnel exists
+cloudflared tunnel list
+
+# Inspect the tunnel details by name and view associated routes
+cloudflared tunnel info local-machine-ping
+```
+
+If the hostname is correctly routed, the tunnel info should show an entry
+for `ping.yourdomain.com`.
+
+---
+
 ## Step 5 — Configure the package
 
 Copy `.env.example` to `.env` inside this package and fill in the values:
@@ -138,6 +155,10 @@ LOCAL_MACHINE_PORT=7001
 
 # Token from Step 3
 CF_TUNNEL_TOKEN=eyJh…
+
+# Cloudflare Access service token credentials
+CF_ACCESS_CLIENT_ID=...
+CF_ACCESS_CLIENT_SECRET=...
 
 # Hostname from Step 4 (for the log line only — cloudflared ignores this)
 CF_TUNNEL_HOSTNAME=ping.yourdomain.com
@@ -177,9 +198,12 @@ bun run start
 # [local-machine] All systems up. Press Ctrl-C to stop.
 ```
 
-Open a second terminal and test from the public internet:
+Open a second terminal and test from the public internet using Cloudflare Access service token headers:
 ```bash
-curl https://ping.yourdomain.com/ping
+curl \
+  -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+  -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
+  https://ping.yourdomain.com/ping
 # {"pong":true,"machine":"local","timestamp":"2026-04-11T12:00:01.123Z"}
 ```
 
@@ -208,18 +232,31 @@ Add the hostname to your app's environment:
 LOCAL_MACHINE_PING_URL=https://ping.yourdomain.com
 ```
 
-Call it from a Server Component or Route Handler:
+Call it from a Server Component or Route Handler using Cloudflare Access
+service token headers:
 
 ```ts
 // apps/web/src/app/ping/route.ts
 export async function GET() {
   const res = await fetch(`${process.env.LOCAL_MACHINE_PING_URL}/ping`, {
-    // tell Next.js not to cache this — we want a live response from the machine
     cache: "no-store",
+    headers: {
+      "CF-Access-Client-Id":     process.env.CF_ACCESS_CLIENT_ID!,
+      "CF-Access-Client-Secret": process.env.CF_ACCESS_CLIENT_SECRET!,
+    },
   });
   const data = await res.json();
   return Response.json(data);
 }
+```
+
+Or test the tunnel directly with curl:
+
+```bash
+curl \
+  -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+  -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
+  "https://ping.yourdomain.com/ping"
 ```
 
 > **What just happened?**  
@@ -230,26 +267,23 @@ export async function GET() {
 
 ---
 
-## Step 9 — Protect the endpoint with Cloudflare Access (optional but recommended)
+## Step 9 — Protect the endpoint with Cloudflare Access
 
-Without protection, anyone who knows `ping.yourdomain.com/ping` can hit
-your laptop. Cloudflare Access adds an identity gate in front of the tunnel
-at the edge — before traffic reaches `cloudflared`.
+Cloudflare Access is the default and required way to secure the tunnel
+connection in this guide. It adds a service-token gate at the edge so only
+authorized machine-to-machine requests can reach your laptop.
 
 ```bash
 # In the Cloudflare dashboard:
 # Zero Trust → Access → Applications → Add an application
 # Type: Self-hosted
 # Application domain: ping.yourdomain.com
-# Policy: Allow — Email ends in @yourdomain.com  (or a service token)
+# Policy: Service Token only
 ```
-
-For **machine-to-machine** calls (like the Next.js app above) use a
-**Service Token** instead of interactive login:
 
 1. Zero Trust → Access → Service Auth → Create Service Token.  
    Cloudflare gives you `CF-Access-Client-Id` and `CF-Access-Client-Secret`.
-2. Add a policy that allows the service token on your application.
+2. Add a policy that allows that service token on the application.
 3. Pass the headers from the Next.js app:
 
 ```ts
@@ -264,31 +298,8 @@ const res = await fetch(`${process.env.LOCAL_MACHINE_PING_URL}/ping`, {
 
 > **What just happened?**  
 > Cloudflare's edge validates the service token *before* forwarding the
-> request to your tunnel. Unauthenticated requests get a 403 at the Cloudflare
-> layer — `cloudflared` and your Bun server never see them. This is the same
-> pattern used in `packages/api` and `packages/llm` for the Ollama endpoint.
-
----
-
-## Quick-tunnel shortcut (no Cloudflare account needed)
-
-`cloudflared` can create a throw-away public URL with zero config:
-
-```bash
-# Start the ping server first
-bun run ping &
-
-# In another terminal:
-cloudflared tunnel --url http://localhost:7001
-# 2026-04-11T12:00:00Z INF +----------------------------+
-# 2026-04-11T12:00:00Z INF |  Your quick Tunnel address |
-# 2026-04-11T12:00:00Z INF |  https://abc123.trycloudflare.com |
-# 2026-04-11T12:00:00Z INF +----------------------------+
-```
-
-The URL is public and lives for the duration of the process. Useful for
-demos or webhook testing. No token, no DNS, no account required — but the
-URL changes every time.
+> request to your tunnel. Unauthenticated requests are blocked at the edge,
+> so `cloudflared` and your Bun server only see authorized traffic.
 
 ---
 
@@ -329,4 +340,5 @@ packages/local-machine/
 | `curl: (6) Could not resolve host` | DNS not propagated | Wait 60 s or check Step 4 |
 | `error 1033` in browser | Tunnel offline | Make sure `bun run start` is running |
 | `403 Forbidden` | Access policy blocked you | Add your IP/email to the policy or pass service token |
+| No response from `https://ping.yourdomain.com/ping` | Cloudflare Access headers missing or hostname routing not active | Use the curl test with `CF-Access-Client-Id` and `CF-Access-Client-Secret`, and verify `cloudflared tunnel info local-machine-ping` |
 | Port 7001 already in use | Another process | `lsof -i :7001` then kill it, or change `LOCAL_MACHINE_PORT` |

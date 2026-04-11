@@ -345,8 +345,13 @@ const pingRouter = {
 	 */
 	ping: publicProcedure.handler(async () => {
 		const url = `${env.LOCAL_MACHINE_PING_URL}/ping`;
+		const headers = {
+			"CF-Access-Client-Id": env.CF_ACCESS_CLIENT_ID,
+			"CF-Access-Client-Secret": env.CF_ACCESS_CLIENT_SECRET,
+		};
+
 		try {
-			const res = await fetch(url);
+			const res = await fetch(url, { headers });
 			if (!res.ok) {
 				return {
 					ok: false as const,
