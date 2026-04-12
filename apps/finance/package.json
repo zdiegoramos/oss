@@ -18,6 +18,7 @@
     "@oss/api": "workspace:*",
     "@oss/auth": "workspace:*",
     "@oss/env": "workspace:*",
+    "@oss/seo": "workspace:*",
     "@oss/shared": "workspace:*",
     "@oss/ui": "workspace:*",
     "@polar-sh/better-auth": "catalog:",

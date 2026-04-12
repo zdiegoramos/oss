@@ -33,6 +33,7 @@
         "@oss/api": "workspace:*",
         "@oss/auth": "workspace:*",
         "@oss/env": "workspace:*",
+        "@oss/seo": "workspace:*",
         "@oss/shared": "workspace:*",
         "@oss/ui": "workspace:*",
         "@polar-sh/better-auth": "catalog:",
@@ -120,6 +121,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@oss/env": "workspace:*",
+        "@oss/seo": "workspace:*",
         "@oss/shared": "workspace:*",
         "@oss/ui": "workspace:*",
         "@tanstack/react-form": "catalog:",
@@ -247,6 +249,21 @@
         "typescript": "^5",
       },
     },
+    "packages/seo": {
+      "name": "@oss/seo",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@oss/config": "workspace:*",
+        "@types/react": "^19.2.10",
+        "next": "catalog:",
+        "react": "^19.2.3",
+        "typescript": "^5",
+      },
+      "peerDependencies": {
+        "next": ">=15.0.0",
+        "react": ">=18.0.0",
+      },
+    },
     "packages/shared": {
       "name": "@oss/shared",
       "version": "0.0.0",
@@ -261,7 +278,6 @@
       "dependencies": {
         "@base-ui/react": "^1.0.0",
         "@icons-pack/react-simple-icons": "catalog:",
-        "@oss/auth": "workspace:*",
         "@oss/shared": "workspace:*",
         "@react-email/components": "catalog:",
         "@uidotdev/usehooks": "^2.4.1",
@@ -924,6 +940,8 @@
     "@oss/llm": ["@oss/llm@workspace:packages/llm"],
 
     "@oss/local-machine": ["@oss/local-machine@workspace:packages/local-machine"],
+
+    "@oss/seo": ["@oss/seo@workspace:packages/seo"],
 
     "@oss/shared": ["@oss/shared@workspace:packages/shared"],
 

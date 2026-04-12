@@ -1,0 +1,22 @@
+{
+  "name": "@oss/seo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "peerDependencies": {
+    "next": ">=15.0.0",
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@oss/config": "workspace:*",
+    "@types/react": "^19.2.10",
+    "next": "catalog:",
+    "react": "^19.2.3",
+    "typescript": "^5"
+  }
+}

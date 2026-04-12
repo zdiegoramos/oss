@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@oss/env": "workspace:*",
+    "@oss/seo": "workspace:*",
     "@oss/shared": "workspace:*",
     "@oss/ui": "workspace:*",
     "@tanstack/react-form": "catalog:",

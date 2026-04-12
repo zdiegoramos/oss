@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/utils/orpc.server";
 import "@/index.css";
 import { Wireframe } from "@oss/ui/components/wireframe";
 import { cn } from "@oss/ui/lib/utils";
+import type { Metadata } from "next";
 import { Navbar } from "@/components/navigation";
+import { generateMetadata } from "@/lib/seo";
 import Providers from "@/providers";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
@@ -14,10 +15,10 @@ const fontMono = Geist_Mono({
 	variable: "--font-mono",
 });
 
-export const metadata: Metadata = {
-	title: "oss",
-	description: "oss",
-};
+export const metadata: Metadata = generateMetadata({
+	title: "Finance",
+	description: "Scan invoices and track your finances",
+});
 
 export default function RootLayout({
 	children,

@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/index.css";
 import { cn } from "@oss/ui/lib/utils";
+import type { Metadata } from "next";
+import { generateMetadata } from "@/lib/seo";
 import Providers from "@/providers";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
@@ -11,10 +12,10 @@ const fontMono = Geist_Mono({
 	variable: "--font-mono",
 });
 
-export const metadata: Metadata = {
-	title: "oss",
-	description: "oss",
-};
+export const metadata: Metadata = generateMetadata({
+	title: "OSS",
+	description: "Open source software, built in public.",
+});
 
 export default function RootLayout({
 	children,
