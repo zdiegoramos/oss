@@ -3,30 +3,30 @@ import { FINANCE_METADATA } from "@oss/shared/metadata/finance";
 export function VerifyEmail() {
 	return (
 		<div className="mx-auto mb-8 max-w-prose">
-			<div>Revisa tu correo electrónico</div>
+			<div>Check your email</div>
 			<div className="mb-4 text-muted-foreground italic">
-				Hemos enviado un enlace de verificación a tu correo electrónico.
+				We have sent a verification link to your email.
 			</div>
 			<div className="space-y-4">
-				<h3 className="font-semibold text-lg">Próximos pasos:</h3>
+				<h3 className="font-semibold text-lg">Next steps:</h3>
 				<ol className="ml-4 list-decimal space-y-3 text-muted-foreground">
 					<li>
-						Busca el correo de verificación de {FINANCE_METADATA.displayName} y
-						sigue las instrucciones.
+						Look for the verification email from {FINANCE_METADATA.displayName}{" "}
+						and follow the instructions.
 					</li>
 				</ol>
 
 				<div className="mb-4 rounded-md bg-primary/5 p-4">
-					<p className="mb-1 font-medium text-sm">¿No encuentras el correo?</p>
+					<p className="mb-1 font-medium text-sm">Can't find the email?</p>
 					<p className="text-muted-foreground text-sm">
-						Revisa tu carpeta de spam o correo no deseado. El correo puede
-						tardar unos minutos en llegar.
+						Check your spam or junk folder. The email may take a few minutes to
+						arrive.
 					</p>
 				</div>
 
 				<div className="text-center">
 					<p className="text-muted-foreground text-sm">
-						Puedes cerrar esta pestaña.
+						You can close this tab.
 					</p>
 				</div>
 			</div>

@@ -17,14 +17,14 @@ export function ResetPassword() {
 
 	let error: string | null = null;
 	if (errorResult.success && errorResult.data === "INVALID_TOKEN") {
-		error = "El enlace ha expirado o no es válido";
+		error = "The link has expired or is invalid";
 	} else if (!tokenResult.success) {
-		error = "No se proporcionó un token válido";
+		error = "No valid token was provided";
 	}
 
 	return (
 		<div className="mx-auto max-w-sm pt-8">
-			<div>Restablecer Contraseña</div>
+			<div>Reset Password</div>
 			<ResetPasswordForm error={error} token={token} />
 		</div>
 	);

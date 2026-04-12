@@ -11,7 +11,7 @@ export function deleteLineBreaks(value: string) {
 
 export function emptyStringNotAllowed<T>(value: T, ctx: z.RefinementCtx) {
 	if (value === EMPTY_STRING) {
-		ctx.addIssue("Valor inválido.");
+		ctx.addIssue("Invalid value.");
 		return z.NEVER;
 	}
 	return value;
@@ -38,6 +38,6 @@ export const requiredDateSchema = z
 			return value;
 		}
 
-		ctx.addIssue("Valor inválido.");
+		ctx.addIssue("Invalid value.");
 		return z.NEVER;
 	});
