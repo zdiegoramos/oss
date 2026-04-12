@@ -1,9 +1,9 @@
 "use client";
 
+import { authClient } from "@oss/auth/auth-client";
 import { Navigation } from "@oss/ui/components/nav/navigation";
 import { useRouter } from "next/navigation";
 import { USER_NAV_ROUTES } from "@/components/nav";
-import { authClient } from "@/lib/auth-client";
 
 export function Navbar() {
 	const router = useRouter();

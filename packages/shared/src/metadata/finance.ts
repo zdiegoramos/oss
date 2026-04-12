@@ -15,4 +15,7 @@ export const FINANCE_METADATA = {
 	socials: {
 		instagram: "app",
 	},
+	localStorage: {
+		APP_STATE_KEY: "finance-app-state",
+	},
 } as const;

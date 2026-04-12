@@ -1,8 +1,7 @@
 import { auth } from "@oss/auth";
-
+import { ForgotPasswordForm } from "@oss/ui/components/auth/forgot-password-form";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Login } from "@/app/login/login";
 
 const HOMEPAGE = "/";
 
@@ -16,5 +15,5 @@ export default async function Page() {
 		redirect(HOMEPAGE);
 	}
 
-	return <Login />;
+	return <ForgotPasswordForm />;
 }
