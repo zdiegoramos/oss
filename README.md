@@ -34,7 +34,9 @@ Most businesses that deal with high volumes of invoices still rely on people man
 ## Apps
 
 ### `finance` — [finance.zdiego.com](https://finance.zdiego.com)
-A fully functional SaaS demo built around the invoice scanner. Includes authentication (with passkey support), a dashboard showing recorded expenses, an invoice scan flow, and billing via Polar. This is how I'd architect a real SaaS product.
+A fully functional demo of an AI invoice scanner. Users submit their invoices on finance.zdiego.com and an ollama vision LLM extracts structured data from it. Turning pdfs/images into a queryable database.
+
+This setup achieves private inference because the LLM runs on a local machine, which is exposed to the internet using a Cloudflare Tunnel + Zero Trust Access.
 
 ![Finance app demo](apps/finance/public/finance.gif)
 
