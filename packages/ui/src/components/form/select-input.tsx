@@ -45,7 +45,7 @@ export function SelectInput({
 				value={field.state.value}
 			>
 				<SelectTrigger>
-					<SelectValue placeholder={resolvedPlaceholder ?? "Seleccione"} />
+					<SelectValue placeholder={resolvedPlaceholder ?? "Select"} />
 				</SelectTrigger>
 				<SelectContent>
 					{items.map(([id, displayName]) => (

@@ -27,9 +27,9 @@ export function DateInput({
 
 	const buttonText =
 		value instanceof Date ? (
-			format(field.state.value, "PP", { locale: es })
+			format(field.state.value, "PP")
 		) : (
-			<span>Selecciona una fecha</span>
+			<span>Select a date</span>
 		);
 
 	return (

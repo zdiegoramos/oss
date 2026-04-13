@@ -30,7 +30,7 @@ export function DateRangeInput({
 
 	const buttonText =
 		from instanceof Date && to instanceof Date ? (
-			`del ${format(from, "PP", { locale: es })} - al ${format(to, "PP", { locale: es })}`
+			`from ${format(from, "PP")} - to ${format(to, "PP")}`
 		) : (
 			<span>Pick a date</span>
 		);

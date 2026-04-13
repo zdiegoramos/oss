@@ -34,7 +34,7 @@ export function CountryCodeInput({
 				value={field.state.value}
 			>
 				<SelectTrigger>
-					<SelectValue placeholder="Seleccione" />
+					<SelectValue placeholder="Select" />
 				</SelectTrigger>
 				<SelectContent>
 					{phoneCountryCodes.map((code) => (
