@@ -7,6 +7,7 @@ import { CornerControl } from "@oss/ui/components/wireframe/corner-control";
 import { NavControl } from "@oss/ui/components/wireframe/nav-control";
 import { ResponsiveCornerControl } from "@oss/ui/components/wireframe/responsive-corner-control";
 import { SidebarControl } from "@oss/ui/components/wireframe/sidebar-control";
+import type { WireframeConfig } from "@oss/ui/components/wireframe/wireframe-config-provider";
 import { useWireframeConfig } from "@oss/ui/components/wireframe/wireframe-config-provider";
 
 // Tailwind spacing scale values (in multiples of 0.25rem/4px)
@@ -246,7 +247,7 @@ const CSS_VARIABLE_GROUPS: Record<
 };
 
 type NavCornersSectionProps = {
-	config: ReturnType<typeof useWireframeConfig>["config"];
+	config: WireframeConfig;
 	updateCorner: ReturnType<typeof useWireframeConfig>["updateCorner"];
 };
 
@@ -298,7 +299,7 @@ function NavCornersSection({ config, updateCorner }: NavCornersSectionProps) {
 }
 
 type ResponsiveCornersSectionProps = {
-	config: ReturnType<typeof useWireframeConfig>["config"];
+	config: WireframeConfig;
 	updateResponsiveCorner: ReturnType<
 		typeof useWireframeConfig
 	>["updateResponsiveCorner"];

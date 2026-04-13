@@ -5,9 +5,9 @@ import type React from "react";
 import { createContext, useContext, useState } from "react";
 
 type NavType = "normal" | "sticky" | "responsive";
-type WireframeCornerOptions = "navbar" | "sidebar";
+export type WireframeCornerOptions = "navbar" | "sidebar";
 
-type WireframeConfig = {
+export type WireframeConfig = {
 	navType: NavType;
 	showTopNav: boolean;
 	showBottomNav: boolean;

@@ -2,7 +2,7 @@
 id: "006"
 title: Named prop types in layout-controls-panel
 prd: "0002"
-status: open
+status: closed
 type: afk
 blocked_by: ["001"]
 created: 2026-04-13
@@ -30,3 +30,14 @@ Export `WireframeConfig` and `WireframeCornerOptions` from `wireframe-config-pro
 ## User stories addressed
 
 - User story 6
+
+## Completion
+
+Added `export` to both `WireframeConfig` and `WireframeCornerOptions` type declarations in `wireframe-config-provider.tsx`. Updated `layout-controls-panel.tsx` to import `WireframeConfig` from the config provider and use it in the `config` prop of both `NavCornersSectionProps` and `ResponsiveCornersSectionProps`, replacing the verbose `ReturnType<typeof useWireframeConfig>["config"]` shapes. TypeScript compiles cleanly with no changes to runtime behaviour.
+
+## Suggested Commit
+
+DIEGO: 006 PRD-0002 — named prop types in layout-controls-panel
+
+- packages/ui/src/components/wireframe/wireframe-config-provider.tsx: export WireframeConfig and WireframeCornerOptions
+- packages/ui/src/components/wireframe/layout-controls-panel.tsx: use WireframeConfig for NavCornersSection and ResponsiveCornersSection prop types
