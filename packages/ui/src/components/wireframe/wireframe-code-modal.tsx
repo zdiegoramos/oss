@@ -54,14 +54,6 @@ export function WireframeCodeModal() {
 	};
 
 	const generateCode = () => {
-		const sidebarStatus: string[] = [];
-		if (config.showLeftSidebar) {
-			sidebarStatus.push("Left");
-		}
-		if (config.showRightSidebar) {
-			sidebarStatus.push("Right");
-		}
-
 		// Filter out CSS variables that match default values
 		const nonDefaultCssVars = Object.entries(config.cssVariables).filter(
 			([key, value]) =>
@@ -78,63 +70,47 @@ export function WireframeCodeModal() {
 
 		const cornersCode = buildCornersCode();
 		const hasConfig = cssVarsCode || cornersCode;
+		const configAttr = hasConfig
+			? `\n  config={{\n${cssVarsCode}${cornersCode}  }}`
+			: "";
 
-		return `<Wireframe${
-			hasConfig
-				? `
-  config={{
-${cssVarsCode}${cornersCode}  }}`
-				: ""
-		}>
-  ${(() => {
+		// Nav segment
+		let navSegment: string;
 		if (config.navType === "normal") {
-			const parts: string[] = [];
+			const navParts: string[] = [];
 			if (config.showTopNav) {
-				parts.push(`<WireframeNav position="top">
-    {/* children */}
-  </WireframeNav>`);
+				navParts.push(
+					`<WireframeNav position="top">\n    {/* children */}\n  </WireframeNav>`
+				);
 			}
 			if (config.showBottomNav) {
-				parts.push(`<WireframeNav position="bottom">
-    {/* children */}
-  </WireframeNav>`);
+				navParts.push(
+					`<WireframeNav position="bottom">\n    {/* children */}\n  </WireframeNav>`
+				);
 			}
-			return parts.join("\n  ");
+			navSegment = navParts.join("\n  ");
+		} else if (config.navType === "responsive") {
+			navSegment = `<WireframeNav position="responsive">\n    {/* children */}\n  </WireframeNav>`;
+		} else {
+			navSegment =
+				"<WireframeStickyNav>\n     {/* children */}\n  </WireframeStickyNav>";
 		}
-		if (config.navType === "responsive") {
-			return `<WireframeNav position="responsive">
-    {/* children */}
-  </WireframeNav>`;
+
+		const innerParts: string[] = [navSegment];
+
+		if (config.showLeftSidebar) {
+			innerParts.push(
+				`<WireframeSidebar\n    collapsed={leftSidebarCollapsed}\n    position="left"\n  >\n    {/* children */}\n  </WireframeSidebar>`
+			);
 		}
-		return `<WireframeStickyNav>
-     {/* children */}
-  </WireframeStickyNav>`;
-	})()}
+		if (config.showRightSidebar) {
+			innerParts.push(
+				`<WireframeSidebar\n    collapsed={rightSidebarCollapsed}\n    position="right"\n  >\n    {/* children */}\n  </WireframeSidebar>`
+			);
+		}
+		innerParts.push("{/* children */}");
 
-  ${
-		config.showLeftSidebar
-			? `<WireframeSidebar
-    collapsed={leftSidebarCollapsed}
-    position="left"
-  >
-    {/* children */}
-  </WireframeSidebar>
-
-  `
-			: ""
-	}${
-		config.showRightSidebar
-			? `<WireframeSidebar
-    collapsed={rightSidebarCollapsed}
-    position="right"
-  >
-    {/* children */}
-  </WireframeSidebar>
-
-  `
-			: ""
-	}{/* children */}
-</Wireframe>`;
+		return `<Wireframe${configAttr}>\n  ${innerParts.join("\n\n  ")}\n</Wireframe>`;
 	};
 
 	const handleCopy = async () => {
@@ -150,10 +126,8 @@ ${cssVarsCode}${cornersCode}  }}`
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger>
-				{/* <Button className="size-12 rounded-full" size="icon" variant="default"> */}
 				<Code2 className="size-5" />
 				<span className="sr-only">View Code</span>
-				{/* </Button> */}
 			</DialogTrigger>
 			<DialogContent className="flex max-h-[90dvh] max-w-3xl flex-col sm:max-h-[85vh]">
 				<DialogHeader className="shrink-0">
