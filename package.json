@@ -62,6 +62,7 @@
     "@types/node": "^22.13.14",
     "husky": "latest",
     "lint-staged": "latest",
+    "portless": "^0.10.3",
     "turbo": "^2.9.6",
     "typescript": "^5",
     "ultracite": "7.4.3"
