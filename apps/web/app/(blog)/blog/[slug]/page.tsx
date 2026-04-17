@@ -28,9 +28,11 @@ export default async function BlogPostPage({ params }: Props) {
 	}
 
 	return (
-		<article className="prose prose-neutral dark:prose-invert">
-			<h1>{post.metadata.title}</h1>
-			<time className="not-prose text-muted-foreground text-sm">
+		<article className="font-serif text-2xl leading-relaxed">
+			<h1 className="mb-3 font-bold text-4xl leading-tight">
+				{post.metadata.title}
+			</h1>
+			<time className="text-muted-foreground text-sm">
 				{new Date(post.metadata.date).toLocaleDateString("en-US", {
 					year: "numeric",
 					month: "long",

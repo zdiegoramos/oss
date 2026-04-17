@@ -1,2 +1,15 @@
 @import "@oss/ui/globals.css";
-@plugin "@tailwindcss/typography";
+
+:root {
+	--background: oklch(0.96 0.018 85);
+	--foreground: oklch(0.2 0.02 55);
+}
+
+.dark {
+	--background: oklch(0.18 0.025 55);
+	--foreground: oklch(0.92 0.015 85);
+}
+
+@theme inline {
+	--font-serif: var(--font-eb-garamond), Georgia, serif;
+}
