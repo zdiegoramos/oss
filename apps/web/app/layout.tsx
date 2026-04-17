@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/index.css";
+import { Wireframe } from "@oss/ui/components/wireframe";
 import { cn } from "@oss/ui/lib/utils";
+import { AppSidebar } from "components/app-sidebar";
 import { generateMetadata } from "lib/seo";
 import type { Metadata } from "next";
 import Providers from "providers";
@@ -34,7 +36,12 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<body className="overscroll-none">
-				<Providers>{children}</Providers>
+				<Providers>
+					<Wireframe>
+						<AppSidebar />
+						{children}
+					</Wireframe>
+				</Providers>
 			</body>
 		</html>
 	);
