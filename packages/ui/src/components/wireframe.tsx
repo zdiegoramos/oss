@@ -11,7 +11,7 @@ const defaults = {
 		"--sticky-nav-height": 12,
 		"--sticky-nav-top-offset": 0,
 
-		"--top-nav-height": 16,
+		"--top-nav-height": 14,
 		"--top-nav-left-offset": 0,
 		"--top-nav-right-offset": 0,
 		"--top-nav-top-offset": 0,
