@@ -12,9 +12,6 @@ const nextConfig: NextConfig = {
 	typedRoutes: true,
 	reactCompiler: true,
 	pageExtensions: ["ts", "tsx", "mdx"],
-	experimental: {
-		mdxRs: true,
-	},
 };
 
 export default withMDX(nextConfig);

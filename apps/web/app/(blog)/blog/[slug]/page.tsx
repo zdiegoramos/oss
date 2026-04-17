@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getBlogSlugs } from "@/lib/blog";
+import { getBlogPost, getBlogSlugs } from "@/lib/blog";
 
 type Props = {
 	params: Promise<{ slug: string }>;
@@ -14,6 +14,11 @@ export const dynamicParams = false;
 export default async function BlogPostPage({ params }: Props) {
 	const { slug } = await params;
 
+	const post = getBlogPost(slug);
+	if (!post) {
+		notFound();
+	}
+
 	let Post: React.ComponentType;
 	try {
 		const mod = await import(`@/content/blog/${slug}.mdx`);
@@ -24,6 +29,14 @@ export default async function BlogPostPage({ params }: Props) {
 
 	return (
 		<article className="prose prose-neutral dark:prose-invert">
+			<h1>{post.metadata.title}</h1>
+			<time className="not-prose text-muted-foreground text-sm">
+				{new Date(post.metadata.date).toLocaleDateString("en-US", {
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+				})}
+			</time>
 			<Post />
 		</article>
 	);
