@@ -12,6 +12,8 @@
     "@oss/seo": "workspace:*",
     "@oss/shared": "workspace:*",
     "@oss/ui": "workspace:*",
+    "@react-three/fiber": "^9.6.0",
+    "@react-three/postprocessing": "^3.0.4",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
     "babel-plugin-react-compiler": "^1.0.0",
@@ -19,9 +21,11 @@
     "next": "catalog:",
     "next-themes": "catalog:",
     "p5": "^2.2.3",
+    "postprocessing": "^6.39.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "sonner": "catalog:",
+    "three": "^0.184.0",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -31,6 +35,7 @@
     "@types/node": "^20",
     "@types/react": "^19.2.10",
     "@types/react-dom": "catalog:",
+    "@types/three": "^0.184.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5"
   }

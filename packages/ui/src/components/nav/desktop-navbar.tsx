@@ -26,6 +26,7 @@ export function DesktopNavbar({
 			)}
 		>
 			<NavLogoWithText />
+			<div />
 			<nav className="flex h-full items-center gap-2 md:gap-4">
 				{activeRoutes.map((route) => (
 					<Link
