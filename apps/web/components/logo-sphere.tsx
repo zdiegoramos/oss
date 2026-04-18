@@ -95,7 +95,7 @@ function RippleSphere() {
 				mat.uClickTime = timeRef.current;
 			}}
 		>
-			<sphereGeometry args={[1, 128, 128]} />
+			<sphereGeometry args={[1, 64, 64]} />
 		</mesh>
 	);
 }
