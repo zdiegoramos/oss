@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "portless web next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "capture:text": "bun run scripts/capture-text-og.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

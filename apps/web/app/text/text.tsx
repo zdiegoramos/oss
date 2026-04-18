@@ -2,7 +2,7 @@
 
 import { Center, Environment, Text3D } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { Group } from "three";
 
 const FONT = "/fonts/Cinzel-Bold.json";
@@ -16,10 +16,31 @@ const TEXT_OPTS = {
 	bevelSegments: 3,
 } as const;
 
+type OgWindow = typeof window & {
+	__ogCapture?: boolean;
+	__setOgRotation?: (angle: number) => void;
+};
+
+const ogWin = () => window as OgWindow;
+
 function NameText() {
 	const groupRef = useRef<Group>(null);
 
+	useEffect(() => {
+		ogWin().__setOgRotation = (angle: number) => {
+			if (groupRef.current) {
+				groupRef.current.rotation.y = angle;
+			}
+		};
+		return () => {
+			ogWin().__setOgRotation = undefined;
+		};
+	}, []);
+
 	useFrame(() => {
+		if (ogWin().__ogCapture) {
+			return;
+		}
 		if (groupRef.current) {
 			groupRef.current.rotation.y += 0.005;
 		}
@@ -57,8 +78,9 @@ function NameText() {
 
 export function Text() {
 	return (
-		<div className="h-screen w-full">
-			<Canvas camera={{ position: [0, 0, 6] }}>
+		<div className="fixed inset-0 z-50 bg-white">
+			<Canvas camera={{ position: [0, 0, 3.2], fov: 60 }} gl={{ alpha: false }}>
+				<color args={["white"]} attach="background" />
 				<ambientLight intensity={0.4} />
 				<directionalLight color="#fff8e7" intensity={2} position={[5, 3, 5]} />
 				<directionalLight

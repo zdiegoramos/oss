@@ -1,11 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/index.css";
-import { Wireframe } from "@oss/ui/components/wireframe";
 import { cn } from "@oss/ui/lib/utils";
-import { AppBottomNav } from "components/app-bottom-nav";
-import { AppMobileTopNav } from "components/app-mobile-top-nav";
-import { AppSidebar } from "components/app-sidebar";
-import { AppTopNav } from "components/app-top-nav";
 import { generateMetadata } from "lib/seo";
 import type { Metadata } from "next";
 import Providers from "providers";
@@ -39,19 +34,7 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<body className="overscroll-none">
-				<Providers>
-					<Wireframe
-						config={{
-							corners: { topLeft: "navbar", topRight: "navbar" },
-						}}
-					>
-						<AppTopNav />
-						<AppMobileTopNav />
-						<AppSidebar />
-						<AppBottomNav />
-						{children}
-					</Wireframe>
-				</Providers>
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);
