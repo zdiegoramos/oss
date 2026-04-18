@@ -103,7 +103,7 @@ function RippleSphere() {
 export function LogoSphere() {
 	return (
 		<div className="size-14">
-			<Canvas camera={{ position: [0, 0, 3.2] }} gl={{ alpha: true }}>
+			<Canvas camera={{ position: [0, 0, 2.5], fov: 70 }} gl={{ alpha: true }}>
 				<RippleSphere />
 			</Canvas>
 		</div>
