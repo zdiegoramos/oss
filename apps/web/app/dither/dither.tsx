@@ -15,7 +15,7 @@ import {
 	useMemo,
 	useRef,
 } from "react";
-import { Color, type Mesh, Uniform, Vector2 } from "three";
+import { Color, type Mesh, type ShaderMaterial, Uniform, Vector2 } from "three";
 
 const waveVertexShader = `
 precision highp float;
@@ -231,10 +231,11 @@ function DitheredWaves({
 	mouseRadius,
 }: DitheredWavesProps) {
 	const mesh = useRef<Mesh>(null);
+	const materialRef = useRef<ShaderMaterial>(null);
 	const mouseRef = useRef(new Vector2());
 	const { viewport, size, gl } = useThree();
 
-	const waveUniformsRef = useRef<WaveUniforms>({
+	const initialUniforms: WaveUniforms = {
 		time: new Uniform(0),
 		resolution: new Uniform(new Vector2(0, 0)),
 		waveSpeed: new Uniform(waveSpeed),
@@ -244,21 +245,21 @@ function DitheredWaves({
 		mousePos: new Uniform(new Vector2(0, 0)),
 		enableMouseInteraction: new Uniform(enableMouseInteraction ? 1 : 0),
 		mouseRadius: new Uniform(mouseRadius),
-	});
-
-	useEffect(() => {
-		const dpr = gl.getPixelRatio();
-		const newWidth = Math.floor(size.width * dpr);
-		const newHeight = Math.floor(size.height * dpr);
-		const currentRes = waveUniformsRef.current.resolution.value;
-		if (currentRes.x !== newWidth || currentRes.y !== newHeight) {
-			currentRes.set(newWidth, newHeight);
-		}
-	}, [size, gl]);
+	};
 
 	const prevColor = useRef([...waveColor]);
 	useFrame(({ clock }) => {
-		const u = waveUniformsRef.current;
+		const mat = materialRef.current;
+		if (!mat) {
+			return;
+		}
+		const u = mat.uniforms as WaveUniforms;
+
+		const dpr = gl.getPixelRatio();
+		u.resolution.value.set(
+			Math.floor(size.width * dpr),
+			Math.floor(size.height * dpr)
+		);
 
 		if (!disableAnimation) {
 			u.time.value = clock.getElapsedTime();
@@ -275,7 +276,7 @@ function DitheredWaves({
 		}
 
 		if (!prevColor.current.every((v, i) => v === waveColor[i])) {
-			u.waveColor.value.set(...waveColor);
+			u.waveColor.value.setRGB(...waveColor);
 			prevColor.current = [...waveColor];
 		}
 
@@ -305,7 +306,8 @@ function DitheredWaves({
 				<planeGeometry args={[1, 1]} />
 				<shaderMaterial
 					fragmentShader={waveFragmentShader}
-					uniforms={waveUniformsRef.current}
+					ref={materialRef}
+					uniforms={initialUniforms}
 					vertexShader={waveVertexShader}
 				/>
 			</mesh>
@@ -339,7 +341,7 @@ type DitherProps = {
 	mouseRadius?: number;
 };
 
-export default function Dither({
+export function Dither({
 	waveSpeed = 0.05,
 	waveFrequency = 3,
 	waveAmplitude = 0.3,

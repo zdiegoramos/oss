@@ -1,4 +1,4 @@
-import Dither from "@/components/dither";
+import { Dither } from "@/app/dither/dither";
 
 export default function Page() {
 	return (
@@ -13,11 +13,9 @@ export default function Page() {
 				waveFrequency={3}
 				waveSpeed={0.05}
 			/>
-			{/* <div className="absolute inset-0 z-30 flex select-none items-center justify-center px-4 font-bold text-2xl text-white uppercase leading-relaxed lg:text-5xl">
-        Me monté en un caballo
-        <br />
-        con una loca atrá
-      </div> */}
+			<div className="absolute inset-0 z-30 flex select-none items-center justify-center px-4 font-bold text-2xl text-white uppercase leading-relaxed lg:text-5xl">
+				Diego Ramos
+			</div>
 		</div>
 	);
 }
