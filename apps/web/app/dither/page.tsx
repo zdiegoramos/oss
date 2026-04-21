@@ -1,4 +1,7 @@
+import { Space_Mono } from "next/font/google";
 import { Dither } from "@/app/dither/dither";
+
+const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["700"] });
 
 export default function Page() {
 	return (
@@ -13,7 +16,9 @@ export default function Page() {
 				waveFrequency={3}
 				waveSpeed={0.05}
 			/>
-			<div className="absolute inset-0 z-30 flex select-none items-center justify-center px-4 font-bold text-2xl text-white uppercase leading-relaxed lg:text-5xl">
+			<div
+				className={`${spaceMono.className} absolute inset-0 z-30 flex select-none items-center justify-center px-4 font-bold text-4xl text-white uppercase leading-relaxed lg:text-9xl`}
+			>
 				Diego Ramos
 			</div>
 		</div>
