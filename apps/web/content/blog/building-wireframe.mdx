@@ -58,7 +58,7 @@ const defaultConfig = [
 ];
 ```
 
-The `<Wireframe/>` automatically adjusts based on which children are present. No prop drilling. No context. Just declarative composition.
+The `<Wireframe/>` automatically adjusts based on which children are present. No prop drilling. Just declarative composition.
 
 ## Handling Safe Area Insets
 
@@ -135,62 +135,9 @@ const cornersConfig = {
 
 If the top-left corner is configured for `"navbar"`, the left sidebar gets a top margin. If it's configured for `"sidebar"`, the top nav gets a left margin.
 
-## Responsive Navigation
-
-Mobile apps typically use bottom navigation. Desktop apps use top navigation. I wanted to support both without duplicating code.
-
-The solution was a `responsive` position that switches based on viewport:
-
-```tsx
-<WireframeNav position="responsive">
-  {/* Bottom nav on mobile, top nav on desktop */}
-</WireframeNav>
-```
-
-This required a custom breakpoint in the Tailwind config:
-
-```css
-@theme {
-  --breakpoint-wf-nav: 40rem; /* 640px */
-}
-```
-
-Then the component uses conditional classes:
-
-```tsx
-<div
-  className={cn(
-    "fixed z-50",
-    // Mobile: bottom nav
-    "right-[calc(var(--bottom-nav-right-offset)+env(safe-area-inset-right))]",
-    "bottom-[calc(var(--bottom-nav-bottom-offset)+env(safe-area-inset-bottom))]",
-    "left-[calc(var(--bottom-nav-left-offset)+env(safe-area-inset-left))]",
-    "h-(--bottom-nav-height)",
-    // Desktop: top nav
-    "min-wf-nav:top-[calc(var(--top-nav-top-offset)+env(safe-area-inset-top))]",
-    "min-wf-nav:right-[calc(var(--top-nav-right-offset)+env(safe-area-inset-right))]",
-    "min-wf-nav:left-[calc(var(--top-nav-left-offset)+env(safe-area-inset-left))]",
-    "min-wf-nav:h-(--top-nav-height)",
-    "min-wf-nav:bottom-auto",
-  )}
-  data-wf-responsive-nav
->
-```
-
-Responsive corners are handled similarly, but you only choose the side — not each corner individually:
-
-```tsx
-corners: {
-  responsive: {
-    left: "navbar",  // Responsive nav takes left corners
-    right: "sidebar" // Sidebar takes right corners
-  }
-}
-```
-
 ## Hiding Navigation Per Viewport
 
-Sometimes you want completely different navigation components for mobile and desktop rather than a responsive one. The `hide` prop handles this:
+Sometimes you want different navigation components for mobile and desktop. The `hideOn` prop handles this:
 
 ```tsx
 <WireframeNav position="top" hideOn="mobile">
@@ -288,7 +235,7 @@ The API is deliberately simple. You compose layouts by adding child components:
   </WireframeSidebar>
 
   <WireframeStickyNav>
-    {/* Breadcrumbs, page-level actions — sticks below the top nav */}
+    {/* Breadcrumbs, page-level actions */}
   </WireframeStickyNav>
 
   <main>
@@ -297,13 +244,11 @@ The API is deliberately simple. You compose layouts by adding child components:
 </Wireframe>
 ```
 
-`WireframeStickyNav` is a useful addition — it renders a `position: sticky` bar that tracks just below the fixed top nav, perfect for breadcrumbs or secondary toolbars without breaking scroll behavior.
+`WireframeStickyNav` is a useful addition — it renders a `position: sticky` bar with its own configurable top offset, which works well for breadcrumbs or secondary toolbars without breaking scroll behavior.
 
 It's a thing of beauty. No more manual margin calculations or conditional classes.
 
 ## Why This Approach Works
-
-**No JavaScript for layout.** Everything is pure CSS. The browser handles all the math. JavaScript is only used for the `isMobile` check powering the `hide` prop.
 
 **Collocation.** The configuration lives with the component. You can see at a glance what spacing a layout uses.
 
@@ -315,7 +260,7 @@ The component handles edge cases you'd otherwise forget about:
 - Safe area insets on notched devices
 - Sidebars scroll independently with hidden scrollbars
 - Fixed positioning with proper z-index layering  
-- Responsive breakpoints that affect both nav and corners
+- Viewport-aware show and hide behavior for navs and sidebars
 - Automatic content min-height calculations
 
 ## What Makes Wireframe Different
