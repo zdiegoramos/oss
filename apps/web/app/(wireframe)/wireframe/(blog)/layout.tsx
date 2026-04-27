@@ -1,6 +1,5 @@
 import { Wireframe } from "@oss/ui/components/wireframe";
 import type { Metadata } from "next";
-import { RoutesButton } from "@/components/wireframe/routes-button";
 
 export const metadata: Metadata = {
 	title: "App Wireframe",
@@ -41,7 +40,6 @@ export default function Layout({
 			}}
 		>
 			{children}
-			<RoutesButton />
 		</Wireframe>
 	);
 }

@@ -1,6 +1,5 @@
 import { Wireframe } from "@oss/ui/components/wireframe";
 import type { Metadata } from "next";
-import { RoutesButton } from "@/components/wireframe/routes-button";
 
 export const metadata: Metadata = {
 	title: "App Wireframe",
@@ -11,10 +10,5 @@ export const metadata: Metadata = {
 export default function Layout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
-	return (
-		<Wireframe className="bg-amber-200">
-			{children}
-			<RoutesButton />
-		</Wireframe>
-	);
+	return <Wireframe className="bg-amber-200">{children}</Wireframe>;
 }

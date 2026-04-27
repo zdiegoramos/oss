@@ -1,8 +1,11 @@
+"use client";
+
 import { Wireframe } from "@oss/ui/components/wireframe";
 import { AppBottomNav } from "components/app-bottom-nav";
 import { AppMobileTopNav } from "components/app-mobile-top-nav";
 import { AppSidebar } from "components/app-sidebar";
 import { AppTopNav } from "components/app-top-nav";
+import { ThemeProvider } from "next-themes";
 
 export default function GlobalLayout({
 	children,
@@ -10,16 +13,23 @@ export default function GlobalLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<Wireframe
-			config={{
-				corners: { topLeft: "navbar", topRight: "navbar" },
-			}}
+		<ThemeProvider
+			attribute="class"
+			defaultTheme="system"
+			disableTransitionOnChange
+			enableSystem
 		>
-			<AppTopNav />
-			<AppMobileTopNav />
-			<AppSidebar />
-			<AppBottomNav />
-			{children}
-		</Wireframe>
+			<Wireframe
+				config={{
+					corners: { topLeft: "navbar", topRight: "navbar" },
+				}}
+			>
+				<AppTopNav />
+				<AppMobileTopNav />
+				<AppSidebar />
+				<AppBottomNav />
+				{children}
+			</Wireframe>
+		</ThemeProvider>
 	);
 }
