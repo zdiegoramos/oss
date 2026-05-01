@@ -20,13 +20,12 @@
     "@oss/shared": "workspace:*",
     "@t3-oss/env-core": "^0.13.1",
     "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.1",
-    "drizzle-zod": "^0.8.3",
+    "drizzle-orm": "^1.0.0-rc.1",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@oss/config": "workspace:*",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "^1.0.0-rc.1",
     "typescript": "^5"
   }
 }

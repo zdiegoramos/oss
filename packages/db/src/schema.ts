@@ -4,7 +4,7 @@ import {
 	integerField,
 	textField,
 } from "@oss/shared/allowed-chars";
-import { relations } from "drizzle-orm";
+import { relations } from "drizzle-orm/_relations";
 import {
 	bigint,
 	boolean,
@@ -12,15 +12,17 @@ import {
 	integer,
 	numeric,
 	pgEnum,
-	pgTable,
+	snakeCase,
 	text,
 	timestamp,
 	uniqueIndex,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod/v4";
 import { myNanoid, NANO_ID_LENGTH } from "./constants";
+
+const schema = snakeCase.schema("schema");
 
 // ─── DANGER: AUTH TABLES — DO NOT MODIFY ──────────────────────────────────────
 // These tables are managed by better-auth. Changing column names, types, or
@@ -31,76 +33,66 @@ export const userRoles = pgEnum("user_roles", ["admin", "user"]);
 
 export type UserRoles = (typeof userRoles.enumValues)[number];
 
-export const user = pgTable("user", {
+export const user = schema.table("user", {
 	// Internal bigint PK — never exposed to clients.
-	id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
-	nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+	id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+	nanoId: varchar({ length: NANO_ID_LENGTH })
 		.$defaultFn(() => myNanoid())
 		.notNull()
 		.unique(),
-	name: text("name").notNull(),
-	email: text("email").notNull().unique(),
-	emailVerified: boolean("email_verified").default(false).notNull(),
-	image: text("image"),
-	role: userRoles("role").notNull().default("user"),
-	createdAt: timestamp("created_at", { withTimezone: true })
-		.defaultNow()
-		.notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true })
+	name: text().notNull(),
+	email: text().notNull().unique(),
+	emailVerified: boolean().default(false).notNull(),
+	image: text(),
+	role: userRoles().notNull().default("user"),
+	createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+	updatedAt: timestamp({ withTimezone: true })
 		.defaultNow()
 		.$onUpdate(() => /* @__PURE__ */ new Date())
 		.notNull(),
 });
 
-export const session = pgTable(
+export const session = schema.table(
 	"session",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
-		expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-		token: text("token").notNull().unique(),
-		createdAt: timestamp("created_at", { withTimezone: true })
-			.defaultNow()
-			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+		expiresAt: timestamp({ withTimezone: true }).notNull(),
+		token: text().notNull().unique(),
+		createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+		updatedAt: timestamp({ withTimezone: true })
 			.$onUpdate(() => /* @__PURE__ */ new Date())
 			.notNull(),
-		ipAddress: text("ip_address"),
-		userAgent: text("user_agent"),
-		userId: bigint("user_id", { mode: "bigint" })
+		ipAddress: text(),
+		userAgent: text(),
+		userId: bigint({ mode: "bigint" })
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
 	},
 	(t) => [index("session_userId_idx").on(t.userId)]
 );
 
-export const account = pgTable(
+export const account = schema.table(
 	"account",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
-		accountId: text("account_id").notNull(),
-		providerId: text("provider_id").notNull(),
-		userId: bigint("user_id", { mode: "bigint" })
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+		accountId: text().notNull(),
+		providerId: text().notNull(),
+		userId: bigint({ mode: "bigint" })
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
-		accessToken: text("access_token"),
-		refreshToken: text("refresh_token"),
-		idToken: text("id_token"),
-		accessTokenExpiresAt: timestamp("access_token_expires_at", {
+		accessToken: text(),
+		refreshToken: text(),
+		idToken: text(),
+		accessTokenExpiresAt: timestamp({
 			withTimezone: true,
 		}),
-		refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+		refreshTokenExpiresAt: timestamp({
 			withTimezone: true,
 		}),
-		scope: text("scope"),
-		password: text("password"),
-		createdAt: timestamp("created_at", { withTimezone: true })
-			.defaultNow()
-			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		scope: text(),
+		password: text(),
+		createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+		updatedAt: timestamp({ withTimezone: true })
 			.defaultNow()
 			.$onUpdate(() => /* @__PURE__ */ new Date())
 			.notNull(),
@@ -108,17 +100,15 @@ export const account = pgTable(
 	(t) => [index("account_userId_idx").on(t.userId)]
 );
 
-export const verification = pgTable(
+export const verification = schema.table(
 	"verification",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
-		identifier: text("identifier").notNull(),
-		value: text("value").notNull(),
-		expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+		identifier: text().notNull(),
+		value: text().notNull(),
+		expiresAt: timestamp({ withTimezone: true }).notNull(),
+		createdAt: timestamp({ withTimezone: true }).defaultNow(),
+		updatedAt: timestamp({ withTimezone: true })
 			.defaultNow()
 			.$onUpdate(() => /* @__PURE__ */ new Date())
 			.notNull(),
@@ -128,24 +118,22 @@ export const verification = pgTable(
 
 // passkey table required by @better-auth/passkey plugin.
 // Column names must match what better-auth expects exactly.
-export const passkey = pgTable(
+export const passkey = schema.table(
 	"passkey",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
-		name: varchar("name", { length: 255 }),
-		publicKey: text("public_key").notNull(),
-		userId: bigint("user_id", { mode: "bigint" })
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+		name: varchar({ length: 255 }),
+		publicKey: text().notNull(),
+		userId: bigint({ mode: "bigint" })
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
-		credentialID: text("credential_id").notNull(),
-		counter: integer("counter").notNull(),
-		deviceType: text("device_type").notNull(),
-		backedUp: boolean("backed_up").notNull(),
-		transports: text("transports"),
-		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-		aaguid: text("aaguid"),
+		credentialID: text().notNull(),
+		counter: integer().notNull(),
+		deviceType: text().notNull(),
+		backedUp: boolean().notNull(),
+		transports: text(),
+		createdAt: timestamp({ withTimezone: true }).defaultNow(),
+		aaguid: text(),
 	},
 	(t) => [
 		index("passkey_userId_idx").on(t.userId),
@@ -193,19 +181,17 @@ export const postStatusEnum = pgEnum("post_status", [
 
 export type PostStatus = (typeof postStatusEnum.enumValues)[number];
 
-export const post = pgTable(
+export const post = schema.table(
 	"post",
 	{
 		// ── Primary key ───────────────────────────────────────────────────────────
 		// Internal bigint — never sent to clients. Fast joins, no enumeration risk.
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
 		// ── Public identifier ────────────────────────────────────────────────────
 		// nanoId: the only ID safe to expose in URLs / API responses.
 		// The bigint `id` is used exclusively for internal FK references.
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
@@ -214,10 +200,10 @@ export const post = pgTable(
 		// withTimezone: always stores as UTC, avoids DST surprises.
 		// $onUpdate is the Drizzle layer; the DB trigger is the safety net for
 		// raw SQL updates (see drizzle/setup-triggers.sql).
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
@@ -287,29 +273,27 @@ export const widgetCategoryEnum = pgEnum("widget_category", [
 
 export type WidgetCategory = (typeof widgetCategoryEnum.enumValues)[number];
 
-export const widget = pgTable(
+export const widget = schema.table(
 	"widget",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
 
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
 
-		name: varchar("name", { length: 100 }).notNull(),
-		category: widgetCategoryEnum("category").notNull().default("basic"),
-		amount: integer("amount").notNull(),
+		name: varchar({ length: 100 }).notNull(),
+		category: widgetCategoryEnum().notNull().default("basic"),
+		amount: integer().notNull(),
 	},
 	(t) => [
 		uniqueIndex("widget_nano_id_idx").on(t.nanoId),
@@ -332,28 +316,26 @@ export const insertWidgetSchema = createInsertSchema(widget, {
 
 // ─── BUG TABLE ────────────────────────────────────────────────────────────────
 
-export const bug = pgTable(
+export const bug = schema.table(
 	"bug",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
 
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
 
-		title: varchar("title", { length: 200 }).notNull(),
-		description: varchar("description", { length: 1000 }).notNull(),
+		title: varchar({ length: 200 }).notNull(),
+		description: varchar({ length: 1000 }).notNull(),
 	},
 	(t) => [uniqueIndex("bug_nano_id_idx").on(t.nanoId)]
 );
@@ -383,29 +365,27 @@ export const planTypeEnum = pgEnum("plan_type", ["basic", "pro"]);
 
 export type PlanType = (typeof planTypeEnum.enumValues)[number];
 
-export const plan = pgTable(
+export const plan = schema.table(
 	"plan",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
 
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
 
-		type: planTypeEnum("type").notNull(),
+		type: planTypeEnum().notNull(),
 
-		userId: bigint("user_id", { mode: "bigint" })
+		userId: bigint({ mode: "bigint" })
 			.notNull()
 			.references(() => user.id),
 	},
@@ -454,32 +434,30 @@ export const expiryMonthEnum = pgEnum("expiry_month", [
 
 export type ExpiryMonth = (typeof expiryMonthEnum.enumValues)[number];
 
-export const creditCard = pgTable(
+export const creditCard = schema.table(
 	"credit_card",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
 
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
 
-		cardholderName: varchar("cardholder_name", { length: 100 }).notNull(),
+		cardholderName: varchar({ length: 100 }).notNull(),
 		// Only the last 4 digits are stored — full PANs must never be persisted.
-		lastFourDigits: varchar("last_four_digits", { length: 4 }).notNull(),
-		expiryMonth: expiryMonthEnum("expiry_month").notNull(),
-		expiryYear: varchar("expiry_year", { length: 4 }).notNull(),
-		brand: cardBrandEnum("brand").notNull().default("unknown"),
+		lastFourDigits: varchar({ length: 4 }).notNull(),
+		expiryMonth: expiryMonthEnum().notNull(),
+		expiryYear: varchar({ length: 4 }).notNull(),
+		brand: cardBrandEnum().notNull().default("unknown"),
 	},
 	(t) => [uniqueIndex("credit_card_nano_id_idx").on(t.nanoId)]
 );
@@ -514,22 +492,20 @@ export const insertCreditCardSchema = createInsertSchema(creditCard, {
 
 // ─── ADDRESS TABLE ────────────────────────────────────────────────────────────
 
-export const address = pgTable(
+export const address = schema.table(
 	"address",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
 
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
@@ -619,33 +595,31 @@ export const insertAddressSchema = createInsertSchema(address, {
 
 // ─── INVOICE TABLE ───────────────────────────────────────────────────────────
 
-export const invoice = pgTable(
+export const invoice = schema.table(
 	"invoice",
 	{
-		id: bigint("id", { mode: "bigint" })
-			.primaryKey()
-			.generatedAlwaysAsIdentity(),
+		id: bigint({ mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
 
-		nanoId: varchar("nano_id", { length: NANO_ID_LENGTH })
+		nanoId: varchar({ length: NANO_ID_LENGTH })
 			.$defaultFn(() => myNanoid())
 			.notNull()
 			.unique(),
 
-		createdAt: timestamp("created_at", { withTimezone: true })
+		createdAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
+		updatedAt: timestamp({ withTimezone: true })
 			.$defaultFn(() => new Date())
 			.$onUpdate(() => new Date())
 			.notNull(),
 
-		merchant: varchar("merchant", { length: 200 }).notNull(),
-		date: timestamp("date", { withTimezone: true }).notNull(),
-		amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
-		currency: varchar("currency", { length: 10 }).notNull(),
-		category: varchar("category", { length: 100 }).notNull(),
-		description: text("description").notNull(),
-		tax: numeric("tax", { precision: 12, scale: 2 }).notNull(),
+		merchant: varchar({ length: 200 }).notNull(),
+		date: timestamp({ withTimezone: true }).notNull(),
+		amount: numeric({ precision: 12, scale: 2 }).notNull(),
+		currency: varchar({ length: 10 }).notNull(),
+		category: varchar({ length: 100 }).notNull(),
+		description: text().notNull(),
+		tax: numeric({ precision: 12, scale: 2 }).notNull(),
 	},
 	(t) => [uniqueIndex("invoice_nano_id_idx").on(t.nanoId)]
 );
