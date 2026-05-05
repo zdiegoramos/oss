@@ -1,6 +1,6 @@
 # 07 - Pluggable payload boundary and parity regression tests
 
-Status: needs-triage
+Status: completed
 
 ## What to build
 
@@ -8,11 +8,7 @@ Isolate haiku-specific model/prompt behavior behind a replaceable payload bounda
 
 ## Acceptance criteria
 
-- [ ] Core identity orchestration can run without haiku-specific modules in the same package boundary
-- [ ] The current haiku payload remains functional as the default demo payload
-- [ ] Package-level tests cover owner creation, agent creation, VC issuance, and verification success/failure paths
-- [ ] App-level integration tests cover guided flow parity through verified fulfillment
-
-## Blocked by
-
-- /Users/diego/dev/niwa/.scratch/ack-identity-demo-replatform/issues/06-verified-interaction-gate-with-haiku-fulfillment.md
+- [x] Core identity orchestration can run without haiku-specific modules in the same package boundary
+- [x] The current haiku payload remains functional as the default demo payload
+- [x] Package-level tests cover owner creation, agent creation, VC issuance, and verification success/failure paths
+- [x] App-level integration tests cover guided flow parity through verified fulfillment
