@@ -1,8 +1,10 @@
+import type { Agent } from "@/lib/identity/agent";
 import type { Owner } from "@/lib/identity/owner";
 
 export type DemoSession = {
 	id: string;
 	clientOwner: Owner | null;
+	clientAgent: Agent | null;
 	createdAt: Date;
 };
 
@@ -14,7 +16,12 @@ const DEFAULT_SESSION_ID = "default";
 export function getSession(id = DEFAULT_SESSION_ID): DemoSession {
 	let session = sessions.get(id);
 	if (!session) {
-		session = { id, clientOwner: null, createdAt: new Date() };
+		session = {
+			id,
+			clientOwner: null,
+			clientAgent: null,
+			createdAt: new Date(),
+		};
 		sessions.set(id, session);
 	}
 	return session;
@@ -23,6 +30,11 @@ export function getSession(id = DEFAULT_SESSION_ID): DemoSession {
 export function setClientOwner(owner: Owner, id = DEFAULT_SESSION_ID): void {
 	const session = getSession(id);
 	session.clientOwner = owner;
+}
+
+export function setClientAgent(agent: Agent, id = DEFAULT_SESSION_ID): void {
+	const session = getSession(id);
+	session.clientAgent = agent;
 }
 
 export function resetSession(id = DEFAULT_SESSION_ID): void {
