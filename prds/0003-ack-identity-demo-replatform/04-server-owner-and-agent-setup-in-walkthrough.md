@@ -1,6 +1,6 @@
 # 04 - Server owner and agent setup in walkthrough
 
-Status: needs-triage
+Status: closed
 
 ## What to build
 
@@ -8,10 +8,10 @@ Mirror the setup flow for the counterparty by adding guided steps to create the 
 
 ## Acceptance criteria
 
-- [ ] The walkthrough can create server owner and server agent in-memory
-- [ ] Server DID and DID document artifacts are rendered in the browser
-- [ ] Step ordering enforces server setup after client-side setup and VC issuance
-- [ ] Integration coverage verifies both identities exist and are visible before interaction starts
+- [x] The walkthrough can create server owner and server agent in-memory
+- [x] Server DID and DID document artifacts are rendered in the browser
+- [x] Step ordering enforces server setup after client-side setup and VC issuance
+- [x] Integration coverage verifies both identities exist and are visible before interaction starts
 
 ## Blocked by
 

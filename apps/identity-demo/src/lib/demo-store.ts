@@ -7,6 +7,8 @@ export type DemoSession = {
 	clientOwner: Owner | null;
 	clientAgent: Agent | null;
 	clientOwnershipVC: OwnershipCredentialResult | null;
+	serverOwner: Owner | null;
+	serverAgent: Agent | null;
 	createdAt: Date;
 };
 
@@ -23,6 +25,8 @@ export function getSession(id = DEFAULT_SESSION_ID): DemoSession {
 			clientOwner: null,
 			clientAgent: null,
 			clientOwnershipVC: null,
+			serverOwner: null,
+			serverAgent: null,
 			createdAt: new Date(),
 		};
 		sessions.set(id, session);
@@ -46,6 +50,16 @@ export function setClientOwnershipVC(
 ): void {
 	const session = getSession(id);
 	session.clientOwnershipVC = vc;
+}
+
+export function setServerOwner(owner: Owner, id = DEFAULT_SESSION_ID): void {
+	const session = getSession(id);
+	session.serverOwner = owner;
+}
+
+export function setServerAgent(agent: Agent, id = DEFAULT_SESSION_ID): void {
+	const session = getSession(id);
+	session.serverAgent = agent;
 }
 
 export function resetSession(id = DEFAULT_SESSION_ID): void {

@@ -64,6 +64,180 @@ function StepCard({
 	);
 }
 
+/**
+ * Steps 4–5: server owner and server agent setup.
+ * Self-contained so it can be conditionally rendered without adding complexity
+ * to the parent DemoPage component.
+ */
+function ServerSetupSteps() {
+	const [serverOwnerLoading, setServerOwnerLoading] = useState(false);
+	const [serverOwner, setServerOwner] = useState<IdentityArtifacts | null>(
+		null
+	);
+	const [serverOwnerError, setServerOwnerError] = useState<string | null>(null);
+
+	const [serverAgentLoading, setServerAgentLoading] = useState(false);
+	const [serverAgent, setServerAgent] = useState<IdentityArtifacts | null>(
+		null
+	);
+	const [serverAgentError, setServerAgentError] = useState<string | null>(null);
+
+	async function handleCreateServerOwner() {
+		setServerOwnerLoading(true);
+		setServerOwnerError(null);
+		setServerOwner(null);
+		setServerAgent(null);
+		try {
+			const res = await fetch("/api/demo/owners/server", { method: "POST" });
+			if (!res.ok) {
+				const body = (await res.json()) as { error?: string };
+				throw new Error(body.error ?? `Server error: ${res.status}`);
+			}
+			const data = (await res.json()) as IdentityArtifacts;
+			setServerOwner(data);
+		} catch (err) {
+			setServerOwnerError(err instanceof Error ? err.message : "Unknown error");
+		} finally {
+			setServerOwnerLoading(false);
+		}
+	}
+
+	async function handleCreateServerAgent() {
+		setServerAgentLoading(true);
+		setServerAgentError(null);
+		setServerAgent(null);
+		try {
+			const res = await fetch("/api/demo/agents/server", { method: "POST" });
+			if (!res.ok) {
+				const body = (await res.json()) as { error?: string };
+				throw new Error(body.error ?? `Server error: ${res.status}`);
+			}
+			const data = (await res.json()) as IdentityArtifacts;
+			setServerAgent(data);
+		} catch (err) {
+			setServerAgentError(err instanceof Error ? err.message : "Unknown error");
+		} finally {
+			setServerAgentLoading(false);
+		}
+	}
+
+	return (
+		<>
+			{/* Step 4 — Server Owner */}
+			<StepCard done={!!serverOwner} number={4} title="Create Server Owner">
+				<p className="text-muted-foreground text-sm leading-relaxed">
+					The server side of the ACK identity interaction also has an owner —
+					the entity responsible for the server agent. A separate keypair
+					derives an independent <strong>DID</strong> that identifies this
+					counterparty.
+				</p>
+
+				{!serverOwner && (
+					<button
+						className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+						disabled={serverOwnerLoading}
+						onClick={handleCreateServerOwner}
+						type="button"
+					>
+						{serverOwnerLoading ? (
+							<>
+								<Loader2 className="h-4 w-4 animate-spin" />
+								Generating…
+							</>
+						) : (
+							<>
+								<ChevronRight className="h-4 w-4" />
+								Create server owner
+							</>
+						)}
+					</button>
+				)}
+
+				{serverOwnerError && (
+					<p className="rounded-md border border-red-200 bg-red-50 p-3 text-red-700 text-sm">
+						{serverOwnerError}
+					</p>
+				)}
+
+				{serverOwner && (
+					<div className="space-y-4">
+						<ArtifactBlock label="Server Owner DID">
+							{serverOwner.did}
+						</ArtifactBlock>
+						<ArtifactBlock label="DID Document">
+							{JSON.stringify(serverOwner.didDocument, null, 2)}
+						</ArtifactBlock>
+						<button
+							className="text-muted-foreground text-xs underline transition-colors hover:text-foreground"
+							onClick={handleCreateServerOwner}
+							type="button"
+						>
+							Re-generate
+						</button>
+					</div>
+				)}
+			</StepCard>
+
+			{/* Step 5 — Server Agent (unlocked after Step 4) */}
+			{serverOwner && (
+				<StepCard done={!!serverAgent} number={5} title="Create Server Agent">
+					<p className="text-muted-foreground text-sm leading-relaxed">
+						The server agent acts on behalf of the server owner. Its{" "}
+						<strong>DID document</strong> includes service endpoints under the{" "}
+						<code>/api/demo/agents/server/</code> namespace — the server-side
+						counterpart to the client agent&apos;s protocol surfaces.
+					</p>
+
+					{!serverAgent && (
+						<button
+							className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={serverAgentLoading}
+							onClick={handleCreateServerAgent}
+							type="button"
+						>
+							{serverAgentLoading ? (
+								<>
+									<Loader2 className="h-4 w-4 animate-spin" />
+									Generating…
+								</>
+							) : (
+								<>
+									<ChevronRight className="h-4 w-4" />
+									Create server agent
+								</>
+							)}
+						</button>
+					)}
+
+					{serverAgentError && (
+						<p className="rounded-md border border-red-200 bg-red-50 p-3 text-red-700 text-sm">
+							{serverAgentError}
+						</p>
+					)}
+
+					{serverAgent && (
+						<div className="space-y-4">
+							<ArtifactBlock label="Server Agent DID">
+								{serverAgent.did}
+							</ArtifactBlock>
+							<ArtifactBlock label="DID Document">
+								{JSON.stringify(serverAgent.didDocument, null, 2)}
+							</ArtifactBlock>
+							<button
+								className="text-muted-foreground text-xs underline transition-colors hover:text-foreground"
+								onClick={handleCreateServerAgent}
+								type="button"
+							>
+								Re-generate
+							</button>
+						</div>
+					)}
+				</StepCard>
+			)}
+		</>
+	);
+}
+
 export default function DemoPage() {
 	const [ownerLoading, setOwnerLoading] = useState(false);
 	const [owner, setOwner] = useState<IdentityArtifacts | null>(null);
@@ -332,6 +506,9 @@ export default function DemoPage() {
 					)}
 				</StepCard>
 			)}
+
+			{/* Steps 4–5 — Server setup (unlocked after Step 3) */}
+			{vc && <ServerSetupSteps />}
 		</main>
 	);
 }
