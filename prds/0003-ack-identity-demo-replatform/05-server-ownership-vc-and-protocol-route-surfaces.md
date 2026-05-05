@@ -1,6 +1,6 @@
 # 05 - Server ownership VC and protocol route surfaces
 
-Status: needs-triage
+Status: done
 
 ## What to build
 
@@ -8,10 +8,10 @@ Complete protocol-level app-router surfaces for both client and server agents (`
 
 ## Acceptance criteria
 
-- [ ] Route handlers exist and function for `POST /api/demo/agents/[agentId]/chat`
-- [ ] Route handlers exist and function for `POST /api/demo/agents/[agentId]/identity/challenge`
-- [ ] Route handlers exist and function for `GET /api/demo/agents/[agentId]/identity/vc`
-- [ ] The server ownership VC can be issued and retrieved through the guided flow and protocol surfaces
+- [x] Route handlers exist and function for `POST /api/demo/agents/[agentId]/chat`
+- [x] Route handlers exist and function for `POST /api/demo/agents/[agentId]/identity/challenge`
+- [x] Route handlers exist and function for `GET /api/demo/agents/[agentId]/identity/vc`
+- [x] The server ownership VC can be issued and retrieved through the guided flow and protocol surfaces
 
 ## Blocked by
 

@@ -65,7 +65,7 @@ function StepCard({
 }
 
 /**
- * Steps 4–5: server owner and server agent setup.
+ * Steps 4–6: server owner, server agent, and server ownership VC issuance.
  * Self-contained so it can be conditionally rendered without adding complexity
  * to the parent DemoPage component.
  */
@@ -81,6 +81,10 @@ function ServerSetupSteps() {
 		null
 	);
 	const [serverAgentError, setServerAgentError] = useState<string | null>(null);
+
+	const [serverVcLoading, setServerVcLoading] = useState(false);
+	const [serverVc, setServerVc] = useState<VcArtifacts | null>(null);
+	const [serverVcError, setServerVcError] = useState<string | null>(null);
 
 	async function handleCreateServerOwner() {
 		setServerOwnerLoading(true);
@@ -106,6 +110,7 @@ function ServerSetupSteps() {
 		setServerAgentLoading(true);
 		setServerAgentError(null);
 		setServerAgent(null);
+		setServerVc(null);
 		try {
 			const res = await fetch("/api/demo/agents/server", { method: "POST" });
 			if (!res.ok) {
@@ -118,6 +123,25 @@ function ServerSetupSteps() {
 			setServerAgentError(err instanceof Error ? err.message : "Unknown error");
 		} finally {
 			setServerAgentLoading(false);
+		}
+	}
+
+	async function handleIssueServerVC() {
+		setServerVcLoading(true);
+		setServerVcError(null);
+		setServerVc(null);
+		try {
+			const res = await fetch("/api/demo/vc/issue/server", { method: "POST" });
+			if (!res.ok) {
+				const body = (await res.json()) as { error?: string };
+				throw new Error(body.error ?? `Server error: ${res.status}`);
+			}
+			const data = (await res.json()) as VcArtifacts;
+			setServerVc(data);
+		} catch (err) {
+			setServerVcError(err instanceof Error ? err.message : "Unknown error");
+		} finally {
+			setServerVcLoading(false);
 		}
 	}
 
@@ -229,6 +253,82 @@ function ServerSetupSteps() {
 								type="button"
 							>
 								Re-generate
+							</button>
+						</div>
+					)}
+				</StepCard>
+			)}
+
+			{/* Step 6 — Issue Server Ownership VC (unlocked after Step 5) */}
+			{serverAgent && (
+				<StepCard
+					done={!!serverVc}
+					number={6}
+					title="Issue Server Ownership Credential"
+				>
+					<p className="text-muted-foreground text-sm leading-relaxed">
+						The server owner signs a <strong>ControllerCredential</strong> that
+						attests they control the server agent. This credential is issued as
+						a signed JWT and served from the{" "}
+						<code>/api/demo/agents/server/identity/vc</code> protocol endpoint,
+						enabling mutual identity verification.
+					</p>
+
+					{!serverVc && (
+						<button
+							className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={serverVcLoading}
+							onClick={handleIssueServerVC}
+							type="button"
+						>
+							{serverVcLoading ? (
+								<>
+									<Loader2 className="h-4 w-4 animate-spin" />
+									Issuing…
+								</>
+							) : (
+								<>
+									<ChevronRight className="h-4 w-4" />
+									Issue server ownership credential
+								</>
+							)}
+						</button>
+					)}
+
+					{serverVcError && (
+						<p className="rounded-md border border-red-200 bg-red-50 p-3 text-red-700 text-sm">
+							{serverVcError}
+						</p>
+					)}
+
+					{serverVc && (
+						<div className="space-y-4">
+							<div className="flex items-center gap-2">
+								{serverVc.verified ? (
+									<span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 font-medium text-green-700 text-xs">
+										<ShieldCheck className="h-3.5 w-3.5" />
+										Verified
+									</span>
+								) : (
+									<span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 font-medium text-red-700 text-xs">
+										Verification failed
+									</span>
+								)}
+								{serverVc.verificationError && (
+									<span className="text-muted-foreground text-xs">
+										{serverVc.verificationError}
+									</span>
+								)}
+							</div>
+							<ArtifactBlock label="Server Ownership VC (JWT)">
+								{serverVc.jwt}
+							</ArtifactBlock>
+							<button
+								className="text-muted-foreground text-xs underline transition-colors hover:text-foreground"
+								onClick={handleIssueServerVC}
+								type="button"
+							>
+								Re-issue
 							</button>
 						</div>
 					)}
