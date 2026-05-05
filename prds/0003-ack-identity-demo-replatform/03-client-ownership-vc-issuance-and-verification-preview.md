@@ -1,6 +1,6 @@
 # 03 - Client ownership VC issuance and verification preview
 
-Status: needs-triage
+Status: closed
 
 ## What to build
 
@@ -8,10 +8,10 @@ Add the next guided step that issues a client ownership VC through the app flow 
 
 ## Acceptance criteria
 
-- [ ] The app can issue a client ownership VC after creating the client owner and agent
-- [ ] The issued VC is displayed in an inspectable format in the guided flow
-- [ ] A verification result for the issued VC is visible in the UI step state
-- [ ] Integration coverage verifies issuance and display behavior end-to-end
+- [x] The app can issue a client ownership VC after creating the client owner and agent
+- [x] The issued VC is displayed in an inspectable format in the guided flow
+- [x] A verification result for the issued VC is visible in the UI step state
+- [x] Integration coverage verifies issuance and display behavior end-to-end
 
 ## Blocked by
 

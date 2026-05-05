@@ -58,10 +58,16 @@ export type CreateAgentOptions = {
 	namespace: AgentNamespace;
 	/** The base URL of the app, used to build DID service endpoints. */
 	baseUrl: string;
+	/**
+	 * Optional owner DID that controls this agent. When provided it is written
+	 * into the DID document `controller` field, which is required for
+	 * ControllerCredential verification.
+	 */
+	controller?: DidUri;
 };
 
 export async function createAgent(options: CreateAgentOptions): Promise<Agent> {
-	const { namespace, baseUrl } = options;
+	const { namespace, baseUrl, controller } = options;
 	const keypair = await generateKeypair("secp256k1");
 	const did = createDidKeyUri(keypair);
 
@@ -83,7 +89,12 @@ export async function createAgent(options: CreateAgentOptions): Promise<Agent> {
 		},
 	];
 
-	const didDocument = createDidDocumentFromKeypair({ did, keypair, service });
+	const didDocument = createDidDocumentFromKeypair({
+		did,
+		keypair,
+		service,
+		...(controller ? { controller } : {}),
+	});
 	const signer = createJwtSigner(keypair);
 
 	return {

@@ -1,10 +1,12 @@
 import type { Agent } from "@/lib/identity/agent";
+import type { OwnershipCredentialResult } from "@/lib/identity/credential";
 import type { Owner } from "@/lib/identity/owner";
 
 export type DemoSession = {
 	id: string;
 	clientOwner: Owner | null;
 	clientAgent: Agent | null;
+	clientOwnershipVC: OwnershipCredentialResult | null;
 	createdAt: Date;
 };
 
@@ -20,6 +22,7 @@ export function getSession(id = DEFAULT_SESSION_ID): DemoSession {
 			id,
 			clientOwner: null,
 			clientAgent: null,
+			clientOwnershipVC: null,
 			createdAt: new Date(),
 		};
 		sessions.set(id, session);
@@ -35,6 +38,14 @@ export function setClientOwner(owner: Owner, id = DEFAULT_SESSION_ID): void {
 export function setClientAgent(agent: Agent, id = DEFAULT_SESSION_ID): void {
 	const session = getSession(id);
 	session.clientAgent = agent;
+}
+
+export function setClientOwnershipVC(
+	vc: OwnershipCredentialResult,
+	id = DEFAULT_SESSION_ID
+): void {
+	const session = getSession(id);
+	session.clientOwnershipVC = vc;
 }
 
 export function resetSession(id = DEFAULT_SESSION_ID): void {

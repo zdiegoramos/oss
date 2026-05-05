@@ -29,7 +29,11 @@ export async function POST() {
 	const proto = process.env.NODE_ENV === "production" ? "https" : "http";
 	const baseUrl = `${proto}://${host}`;
 
-	const agent = await createAgent({ namespace: "client", baseUrl });
+	const agent = await createAgent({
+		namespace: "client",
+		baseUrl,
+		controller: session.clientOwner.did,
+	});
 	setClientAgent(agent);
 
 	return NextResponse.json({

@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/demo-store";
 
 /**
  * GET /api/demo/agents/client/identity/vc
  *
- * Protocol endpoint stub — registered as a DID document service endpoint.
- * Full implementation is deferred to a later slice.
+ * DID document service endpoint — returns the signed ownership VC JWT for the
+ * client agent if one has been issued, or 404 if not yet issued.
  */
 export function GET() {
-	return NextResponse.json({ error: "Not implemented" }, { status: 501 });
+	const session = getSession();
+
+	if (!session.clientOwnershipVC) {
+		return NextResponse.json(
+			{ error: "No ownership credential has been issued yet." },
+			{ status: 404 }
+		);
+	}
+
+	return NextResponse.json({ jwt: session.clientOwnershipVC.jwt });
 }
