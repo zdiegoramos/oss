@@ -12,3 +12,5 @@ Triage uses the default canonical labels (`needs-triage`, `needs-info`, `ready-f
 ### Domain docs
 
 Domain docs are multi-context, with `CONTEXT-MAP.md` at the root pointing to context-level `CONTEXT.md` files and ADRs. See `docs/agents/domain.md`.
+
+Always use bun and bunx instead of npm and npx or pnpm and pnpx
